@@ -1,0 +1,28 @@
+{
+  "name": "fantasydrama",
+  "version": "1.0.0",
+  "description": "Fantasy Drama Simulator using AI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node ./dist/app.js",
+    "dev": "ts-node-dev ./src/app.ts"
+  },
+  "author": "Devlin Bentley",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.10",
+    "nodemon": "^2.0.22",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "openai": "^3.2.1"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    // Referenced projects must have the composite flag turned on
+    "composite": true,
+    "rootDir": ".",
+    "outDir": "./dist",
+    "module": "commonjs"
+  }
+}
