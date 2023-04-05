@@ -7,7 +7,8 @@ import http from "http";
 import fs from "fs";
 
 import * as dotenv from 'dotenv';
-dotenv.config();
+const envLoadResult = dotenv.config();
+console.log(`Environment: ${JSON.stringify(envLoadResult)}`);
 
 import postPrompt from "./routes/prompt"
 

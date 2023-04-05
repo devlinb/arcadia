@@ -64,10 +64,10 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-.env.test
-.env.development
-.env.production
+backend/.env
+backend/.env.test
+backend/.env.development
+backend/.env.production
 
 dist
 
