@@ -1,29 +1,15 @@
 <script lang="ts">
-  import Characters from './lib/StoryForm.svelte'
-  import type { TRelationship, TPerson, TStorySubmission } from "../../shared"
+  import Characters from './lib/StoryForm.svelte';
+  import { fetchStory } from './lib/StoryFetcher';
+  import type { TRelationship, TPerson, TStorySubmission } from "../../shared";
 
   let story = "";
 
-  const postStorySubmission = async (submission: TStorySubmission) => {
-    const url = `${import.meta.env.VITE_API_SERVER}${import.meta.env.VITE_PROMPT_URL}`;
-    console.log(`url: ${url}`);
-    const fetchOptions = {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(submission)
-    };
-    const response = await fetch(url, fetchOptions);
-    const result = await response.json();
-    console.log(result);
-    story = result.story;
-  }
 
-  const handleCharacterSubmit = (submission: TStorySubmission) => {
+  const handleCharacterSubmit = async (submission: TStorySubmission) => {
     console.log(`got the story: ${JSON.stringify(submission)}`);
-    postStorySubmission(submission);
+    story = await fetchStory(submission);
+
   }
 </script>
 

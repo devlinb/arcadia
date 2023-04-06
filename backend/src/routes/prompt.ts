@@ -20,23 +20,26 @@ export default async function postPrompt(req: Request, res: Response) {
 
   charactersStr += `\nKingdom - ${submission.kingdom}`;
   
-  const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      { "role": "system", "content": systemPrompt },
-      { "role": "user", "content": initialPrompt },
-      { "role": "user", "content": charactersStr }
-    ],
-    temperature: 0.8,
-    top_p: 1,
-    presence_penalty: 0.6,
-    frequency_penalty: 0
-  });
-  
-  
-  const result = completion.data.choices[0].message?.content;
-  console.log(result);
-  res.status(200).json({"story": result});
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { "role": "system", "content": systemPrompt },
+        { "role": "user", "content": initialPrompt },
+        { "role": "user", "content": charactersStr }
+      ],
+      temperature: 0.8,
+      top_p: 1,
+      presence_penalty: 0.5,
+      frequency_penalty: 0
+    });
+    const result = completion.data.choices[0].message?.content;
+    console.log(result);
+    res.status(200).json({"story": result});
+  } catch (e) {
+    console.log(`got error: ${e}`);
+    res.status(400).json(JSON.stringify(e));
+  }
   return;
 }
 
@@ -71,7 +74,7 @@ The king John became ill (John 🤒).
 
 Mary went into John's room and saw that he was Ill (Mary 👀 John 🤒)
 
-Mary wants to be crowned queen at any cost (Mary 🤔 Mary 👑).
+Mary starts putting in place plans to become the next queen at any cost (Mary 🤔 Mary 👑).
 
 If multiple characters are plotting something together, list all character names, separated by "," and then 🤔 
 
@@ -87,9 +90,18 @@ To strengthen her claim to the throne, Mary married Tim (Mary 💍 Tim)
 
 Tim hired a witch to cast a curse upon Arcadia, plunging it into darkness  (Tim 🧚 Arcadia)
 
-If a character is planning an action involving multiple other characters, format the answer  (character Planning 💭 First Target <Action Emoji> Second Target) Example:
+If a character is planning an action involving multiple other characters, format the answer  (character Planning 🤔 First Target <Action Emoji> Second Target) Example:
 
-John knows that an marriage between Sarah and Tim will ensure Sarah's ascension to the throne  (John 💭 Sarah 💍 Tim)
+John knows that an marriage between Sarah and Tim will ensure Sarah's ascension to the throne  (John 🤔 Sarah 💍 Tim)
+
+If multiple events happen in the same sentence, break them out into separate parentheticals example:
+
+In a fierce battle, John fought Tim, John emerged victorious and was crowned king of Arcadia and Tim was executed for his treachery.
+(John ⚔️ Tim) (John 👑).
+
+If two characters talk, use a speech bubble between their names
+
+John and Sarah discussed what needed to happen to ensure the rebellion failed. (John 💬 Sarah)
 `;
 
 const characters = `

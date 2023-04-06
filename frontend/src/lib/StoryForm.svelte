@@ -3,14 +3,20 @@
   export let onsubmit: (people: TStorySubmission) => void;
   const relationships: Array<TRelationship> = ["King", "Queen", "Older Daughter", "Younger Daughter", 
   "Older Son", "Younger Son", "General", "Bishop", "Advisor", "King's Brother" , 
-  "Queen's Brother", "King's Newphew"]
+  "Queen's Brother", "King's Newphew"];
+  const defaults = [
+        {id:0, name:"Henry", relationship: "King"},
+        {id:1, name:"Beth", relationship: "Queen"},
+        {id:2, name:"Martin", relationship: "Older Son"},
+        {id:3, name:"Shiloh", relationship: "Bishop"},
+        {id:4, name:"Gregory", relationship: "Advisor"},
+        {id:5, name:"Darleen", relationship: "Younger Daughter"}];
   let unusedRelationships: Set<TRelationship> = new Set(relationships);
   let people: Array<TPerson> = [{id: 0, name: '', relationship: 'King'}];
   unusedRelationships.delete('King');
 
   let kingdom: string = 'Arcadia';
   const handleOnAdd = () => {
-    console.log(`unused[0]: ${[...unusedRelationships][0]}`);
     people.push({id: people.length, name:'', relationship: [...unusedRelationships][0]});
     people = people;
     unusedRelationships.delete([...unusedRelationships][0]);
@@ -51,7 +57,7 @@
   
   {#each people as person (person.id)}
     <div>
-      <input type="text" maxlength="12" bind:value={person.name} placeholder="name" required>
+      <input type="text" maxlength="12" bind:value={person.name} placeholder="name"  required>
       <select disabled={person.id === 0} value={person.relationship} on:change={(event) => handleOnSelectChange(person, event)}>
         {#each relationships as relationship}
           <option value={relationship} hidden={!unusedRelationships.has(relationship)}>{relationship}</option>
