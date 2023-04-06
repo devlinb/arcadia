@@ -24,11 +24,11 @@
   <div class="card">
     {#each events as event }
     <div style="display: flex">
-      <p style="text-align: left;">
+      <p style="text-align: left; flex: 2;">
         {event.statement}
       </p>
       <p>—</p>
-      <p style="white-space: nowrap;">
+      <p style="white-space: nowrap; flex: 1; text-align: left;">
         {event.event}
       </p>
     </div>  
