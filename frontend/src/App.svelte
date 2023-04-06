@@ -1,15 +1,18 @@
 <script lang="ts">
   import Characters from './lib/StoryForm.svelte';
   import { fetchStory } from './lib/StoryFetcher';
+  import { parseOutEvents } from './lib/StoryParser';
+  import type { StatementEvent } from './lib/StoryParser';
   import type { TRelationship, TPerson, TStorySubmission } from "../../shared";
 
   let story = "";
+  let events: Array<StatementEvent> = [];
 
 
   const handleCharacterSubmit = async (submission: TStorySubmission) => {
     console.log(`got the story: ${JSON.stringify(submission)}`);
     story = await fetchStory(submission);
-
+    events = parseOutEvents(story);
   }
 </script>
 
@@ -19,7 +22,17 @@
   </div>
 
   <div class="card">
-    {story}
+    {#each events as event }
+    <div style="display: flex">
+      <p style="text-align: left;">
+        {event.statement}
+      </p>
+      <p>—</p>
+      <p style="white-space: nowrap;">
+        {event.event}
+      </p>
+    </div>  
+    {/each}
   </div>
 
 </main>
