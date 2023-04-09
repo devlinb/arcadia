@@ -1,28 +1,22 @@
 <script>
-  import { onMount, afterUpdate } from 'svelte';
+  import { onMount } from 'svelte';
   import { fly, fade } from 'svelte/transition';
 
   export let text = '';
   export let character1 = '';
   export let character2 = '';
   export let action = '';
-  export let delay = 3000;
+
 
   let characters;
+  let key;
 
-  function animateOut(node) {
-    setTimeout(() => {
-      node.classList.add('animate-out');
-    }, delay);
+  // Whenever any either of the characters of if the action changes, the key will change
+  // which will cause all the divs to redraw which then triggers new animations
+  $: {
+    key = character1 +  action + character2;
   }
 
-  onMount(() => {
-    animateOut(characters);
-  });
-
-  afterUpdate(() => {
-    animateOut(characters);
-  });
 </script>
 
 <style>
@@ -38,7 +32,7 @@
 
   :global(.animate-out) {
     transform: translateX(200%);
-    transition: transform 1s;
+    transition: transform .5s;
   }
 
   .characters {
@@ -68,13 +62,11 @@
     text-align: center;
   }
 </style>
-
 <div>
   {text}
-
-  <div class="dialogue-container">
-    
-    <div bind:this="{characters}" class="characters" use:animateOut>
+  {#key key}
+  <div class="dialogue-container"   out:fly="{{ x: 100, delay: 0 }}">
+    <div  class="characters">
       <div in:fly="{{ x: -100, delay: 100 }}" class="character">{character1}</div>
       <div
         transition:fade="{{ delay: 200 }}"
@@ -85,4 +77,5 @@
       <div in:fly="{{ x: 100, delay: 100 }}" class="character">{character2}</div>
     </div>
   </div>
+  {/key}
 </div>
