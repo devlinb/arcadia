@@ -44,7 +44,7 @@
     text={statementPePs[currentStatement].statement}
     character1={statementPePs[currentStatement].PeP.left[0]}
     character2={(statementPePs[currentStatement].PeP.right && statementPePs[currentStatement].PeP.right[0]) || ''}
-    action={statementPePs[currentStatement].PeP.eventEmoji}
+    eventEmoji={statementPePs[currentStatement].PeP.eventEmoji}
     delay={3000}
   />
   {/if}

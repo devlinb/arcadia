@@ -5,16 +5,16 @@
   export let text = '';
   export let character1 = '';
   export let character2 = '';
-  export let action = '';
+  export let eventEmoji = '';
 
 
   let characters;
   let key;
 
-  // Whenever any either of the characters of if the action changes, the key will change
+  // Whenever any either of the characters or if the eventEmoji changes, the key will change
   // which will cause all the divs to redraw which then triggers new animations
   $: {
-    key = character1 +  action + character2;
+    key = character1 +  eventEmoji + character2;
   }
 
 </script>
@@ -72,7 +72,7 @@
         transition:fade="{{ delay: 200 }}"
         class="speech-bubble"
       >
-        {action}
+        {eventEmoji}
       </div>
       {#if character2 && character2 !== ""}
         <div in:fly="{{ x: 100, delay: 100 }}" class="character">{character2}</div>
