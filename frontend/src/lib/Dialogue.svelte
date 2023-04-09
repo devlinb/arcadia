@@ -74,7 +74,9 @@
       >
         {action}
       </div>
-      <div in:fly="{{ x: 100, delay: 100 }}" class="character">{character2}</div>
+      {#if character2 && character2 !== ""}
+        <div in:fly="{{ x: 100, delay: 100 }}" class="character">{character2}</div>
+      {/if}
     </div>
   </div>
   {/key}
