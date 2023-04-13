@@ -1,10 +1,44 @@
+
 <script lang="ts">
   import Characters from './lib/StoryForm.svelte';
   import { fetchStory } from './lib/StoryFetcher';
   import { parseOutEvents, parsePeopleFromEvents, type TStatementPeP } from './lib/StoryParser';
   import type { TStatementEvent } from './lib/StoryParser';
   import type { TRelationship, TPerson, TStorySubmission } from "../../shared";
+  import townSnowUrl from '../src/assets/town_square_snow.jpg'
+  import townDayUrl from '../src/assets/town_square_day.jpg';
+  import townDuskUrl from '../src/assets/town_square_dusk.jpg';
 
+  import  'https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js';
+  // @ts-ignore
+  const viewer = pannellum.viewer('panorama', {
+    "default": {
+        "firstScene": "day",
+        "author": "",
+        "sceneFadeDuration": 1000
+    },
+    "scenes": {
+      "snow": {
+        "type": "equirectangular",
+        "panorama": townSnowUrl,
+        "autoLoad": true,
+        "autoRotate": true,
+      },
+      "day": {
+        "type": "equirectangular",
+        "panorama": townDayUrl,
+        "autoLoad": true,
+        "autoRotate": true,
+      },
+      "dusk": {
+        "type": "equirectangular",
+        "panorama": townDuskUrl,
+        "autoLoad": true,
+        "autoRotate": true,
+      }
+    }}
+    );
+    
   import Dialogue from './lib/Dialogue.svelte';
 
   let story = "";
@@ -20,12 +54,16 @@
     story = await fetchStory(submission);
     events = parseOutEvents(story);
     statementPePs = parsePeopleFromEvents(events);
-    console.log(statementPePs);
+    
+    // @ts-ignore
+    viewer.loadScene("snow");
     
     const enqueueNextLoop = () => setTimeout(() => {
       if( currentStatement < statementPePs.length - 1) {
         currentStatement++;
         enqueueNextLoop();
+      } else {
+        viewer.loadScene("dusk");
       }
       return;
     }, 5000);
@@ -45,11 +83,10 @@
     character1={statementPePs[currentStatement].PeP.left[0]}
     character2={(statementPePs[currentStatement].PeP.right && statementPePs[currentStatement].PeP.right[0]) || ''}
     eventEmoji={statementPePs[currentStatement].PeP.eventEmoji}
-    delay={3000}
   />
   {/if}
 
-  <div class="card">
+  <!-- <div class="card">
     {#each events as event }
     <div style="display: flex">
       <p style="text-align: left; flex: 2;">
@@ -61,7 +98,7 @@
       </p>
     </div>  
     {/each}
-  </div>
+  </div> -->
 
 </main>
 

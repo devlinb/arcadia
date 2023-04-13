@@ -22,12 +22,16 @@
 <style>
   .dialogue-container {
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 200px;
+    /* justify-content: center;
+    align-items: center; */
     max-width: 80%;
     margin: 0 auto;
     overflow: hidden;
+    height: 200px;
+    max-height: 200px;
   }
 
   :global(.animate-out) {
@@ -37,13 +41,16 @@
 
   .characters {
     display: flex;
-    gap: 50px;
+
     justify-content: center;
+    grid-column: 1;
+    grid-row: 1;
+    height: 100px;
   }
 
   .character {
     width: 100px;
-    height: 100px;
+
     border-radius: 50%;
     background-color: #eee;
     display: flex;
@@ -53,29 +60,37 @@
   }
 
   .speech-bubble {
-    margin: 0 auto;
-    background-color: #f9f9f9;
+    margin: 0 10;
+    
     border-radius: 5px;
-    padding: 10px;
-    min-width: 200px;
+    
+    min-width: 100px;
     max-width: 50%;
     text-align: center;
+    font-size: 32px;
+  }
+
+  .story-line-container {
+    max-width: 80em;
   }
 </style>
 <div>
-  {text}
+  <div class="story-line-container">
+    {text}
+  </div>
   {#key key}
-  <div class="dialogue-container"   out:fly="{{ x: 100, delay: 0 }}">
+  <div class="dialogue-container">
     <div  class="characters">
-      <div in:fly="{{ x: -100, delay: 100 }}" class="character">{character1}</div>
+      <div  class="character"  in:fly="{{ x: -100, delay: 300, duration: 500 }}"
+      >{character1}</div>
       <div
-        transition:fade="{{ delay: 200 }}"
+      in:fade="{{delay: 600 }}"
         class="speech-bubble"
       >
         {eventEmoji}
       </div>
       {#if character2 && character2 !== ""}
-        <div in:fly="{{ x: 100, delay: 100 }}" class="character">{character2}</div>
+        <div class="character" in:fly="{{ x: 100, delay: 300, duration: 500 }}">{character2}</div>
       {/if}
     </div>
   </div>
