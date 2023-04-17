@@ -14,7 +14,6 @@
   const viewer = pannellum.viewer('panorama', {
     "default": {
         "firstScene": "day",
-        "author": "",
         "sceneFadeDuration": 1000
     },
     "scenes": {
@@ -43,6 +42,7 @@
 
   let story = "";
   let events: Array<TStatementEvent> = [];
+  let submitted = false;
 
   let currentStatement = 0;
 
@@ -50,7 +50,7 @@
   let statementPePs: Array<TStatementPeP> = [];
 
   const handleCharacterSubmit = async (submission: TStorySubmission) => {
-    console.log(`got the story: ${JSON.stringify(submission)}`);
+    submitted = true;
     story = await fetchStory(submission);
     events = parseOutEvents(story);
     statementPePs = parsePeopleFromEvents(events);
@@ -72,9 +72,11 @@
 </script>
 
 <main>
+  {#if !submitted}
   <div class="card">
     <Characters onsubmit={handleCharacterSubmit} />
   </div>
+  {/if}
 
   {#if events.length !== 0}
   <!-- Problem! Dialog animations don't kick off after loop increments, because we are using onmount in the component -->
@@ -85,20 +87,6 @@
     eventEmoji={statementPePs[currentStatement].PeP.eventEmoji}
   />
   {/if}
-
-  <!-- <div class="card">
-    {#each events as event }
-    <div style="display: flex">
-      <p style="text-align: left; flex: 2;">
-        {event.statement}
-      </p>
-      <p>—</p>
-      <p style="white-space: nowrap; flex: 1; text-align: left;">
-        {event.event}
-      </p>
-    </div>  
-    {/each}
-  </div> -->
 
 </main>
 

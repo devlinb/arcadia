@@ -25,7 +25,7 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
+  display: block;
   place-items: center;
   justify-content: center;
   align-items: center;
@@ -41,13 +41,18 @@ h1 {
 
 .card {
   padding: 2em;
-  max-width: 800px;
+  
+  display: flex;
+  flex-direction: column;
 }
 
 #app {
-  max-width: 1280px;
   margin: 0 auto;
-  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
 }
 
 main { 
@@ -57,6 +62,9 @@ main {
   border-radius: 10px;
   opacity: 95%;
   border-color: #FFF190;
+  display: flex;
+  justify-content: center;
+
 }
 
 button {

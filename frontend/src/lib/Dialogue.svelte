@@ -27,8 +27,9 @@
     grid-template-rows: 200px;
     /* justify-content: center;
     align-items: center; */
-    max-width: 80%;
-    margin: 0 auto;
+    align-self: center;
+    width: 100%;
+    margin: 0;
     overflow: hidden;
     height: 200px;
     max-height: 200px;
@@ -42,45 +43,49 @@
   .characters {
     display: flex;
 
-    justify-content: center;
+    justify-content: space-around;
     grid-column: 1;
     grid-row: 1;
     height: 100px;
+    width: 100%;
   }
 
   .character {
     width: 100px;
 
-    border-radius: 50%;
+    border-radius: 25%;
     background-color: #eee;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .speech-bubble {
-    margin: 0 10;
+    margin: 0 5;
     
     border-radius: 5px;
     
-    min-width: 100px;
+    min-width: 50px;
     max-width: 50%;
     text-align: center;
     font-size: 32px;
   }
 
   .story-line-container {
-    max-width: 80em;
+    min-height: 100px;
+    padding: 1em;
   }
+
 </style>
-<div>
+<div class="card">
   <div class="story-line-container">
     {text}
   </div>
-  {#key key}
   <div class="dialogue-container">
-    <div  class="characters">
+  {#key key}
+  
+    <div  class="characters" out:fly="{{ x: 100, delay: 0, duration: 200 }}">
       <div  class="character"  in:fly="{{ x: -100, delay: 300, duration: 500 }}"
       >{character1}</div>
       <div
@@ -93,6 +98,6 @@
         <div class="character" in:fly="{{ x: 100, delay: 300, duration: 500 }}">{character2}</div>
       {/if}
     </div>
-  </div>
   {/key}
+</div>
 </div>
