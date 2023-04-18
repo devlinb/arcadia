@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Quintessential&display=swap');
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -31,40 +33,73 @@ body {
   align-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-image: url('./assets/background-tile.png');
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
 }
 
 .card {
-  padding: 2em;
-  
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
+}
+
+.card .story-line-container {
+  padding: 1rem 4rem 2rem;
+  color: #312300;
+  font-family: 'Berkshire Swash', cursive;
+  font-weight: 700;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  /* text-shadow: 1px 1px 0px #fff; */
+}
+
+.dialogue-container {
+  padding: 2rem 0 1rem;
+}
+
+h1 {
+  font-family: 'Berkshire Swash', cursive;
+  text-shadow: 1px 1px 0px #fff;
+  color: #dd9e00;
+}
+
+reference {
+  display: block;
+  height: 100vh;
 }
 
 #app {
-  margin: 0 auto;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%;
-}
-
-main { 
-  background-color: #FCFEF0;
-  border-style: ridge;
-  border-width: 2px;
-  border-radius: 10px;
-  opacity: 95%;
-  border-color: #FFF190;
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
+main {
+  border: 1px solid rgba(255, 241, 144, 1);
+  /* background: rgba(255, 239, 200, 0.4); */
+  padding: 0.2rem;
+  border-radius: 10px;
+}
+
+border {
+  display: block;
+  padding: 10px;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #ffe090, #edca56);
+}
+
+content {
+  background: linear-gradient(145deg, #ffecbb, #fff5dd, #ffefc4, #fff7e2);
+  background-color: rgb(255, 245, 223);
+  background-image: url(black-felt.png);
+  background-blend-mode: color-burn;
+  border-radius: 4px;
+  opacity: 95%;
+  display: flex;
+  justify-content: center;
+  width: 500px;
+  max-width: 100%;
+  height: auto;
+  text-align: center;
 }
 
 button {
@@ -84,6 +119,19 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+devcontrols {
+  display: block;
+  position: absolute;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  color: white;
+  top: 1rem;
+  margin-left: -2rem;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 @media (prefers-color-scheme: light) {
