@@ -1,40 +1,43 @@
 <script>
   import { onMount } from 'svelte';
   import { fly, fade } from 'svelte/transition';
+  import { currentStatement, playStory, stopStory, previousStatement, nextStatement } from '../stores/story';
+  let text = $currentStatement.statement;
+  let character1 = $currentStatement.PeP.left;
+  let character2 = $currentStatement.PeP.right ;
+  let eventEmoji = $currentStatement.PeP.eventEmoji;
 
-  export let text = '';
-  export let character1 = '';
-  export let character2 = '';
-  export let eventEmoji = '';
-
-  let characters;
   let key;
 
   // Whenever any either of the characters or if the eventEmoji changes, the key will change
   // which will cause all the divs to redraw which then triggers new animations
   $: {
-    key = character1 + eventEmoji + character2;
+    key = JSON.stringify($currentStatement.PeP.left) + $currentStatement.PeP.eventEmoji + JSON.stringify($currentStatement.PeP.right);
   }
 </script>
 
 <div class="card">
   <div class="story-line-container">
-    {text}
+    {$currentStatement.statement}
   </div>
   <div class="dialogue-container">
     {#key key}
       <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>
-        <div class="character" in:fly={{ x: -100, delay: 300, duration: 500 }}>{character1}</div>
+        <div class="character" in:fly={{ x: -100, delay: 300, duration: 500 }}>{$currentStatement.PeP.left[0]}</div>
         <div in:fade={{ delay: 600 }} class="speech-bubble">
-          {eventEmoji}
+          {$currentStatement.PeP.eventEmoji}
         </div>
-        {#if character2 && character2 !== ''}
-          <div class="character" in:fly={{ x: 100, delay: 300, duration: 500 }}>{character2}</div>
+        {#if $currentStatement.PeP.right && $currentStatement.PeP.right[0] !== ''}
+          <div class="character" in:fly={{ x: 100, delay: 300, duration: 500 }}>{$currentStatement.PeP.right[0]}</div>
         {/if}
       </div>
     {/key}
   </div>
   <h1 id="card-header">Our story unfolds...</h1>
+  <button on:click={previousStatement}>prev</button>
+  <button on:click={playStory}>play</button>
+  <button on:click={stopStory}>stop</button>
+  <button on:click={nextStatement}>next</button>
 </div>
 
 <style>

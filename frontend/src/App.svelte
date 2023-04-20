@@ -1,6 +1,7 @@
 <script lang="ts">
   import Characters from './lib/StoryForm.svelte';
   import { fetchStory } from './lib/StoryFetcher';
+  import { setStory, playStory } from './stores/story';
   import { parseOutEvents, parsePeopleFromEvents, type TStatementPeP } from './lib/StoryParser';
   import type { TStatementEvent } from './lib/StoryParser';
   import type { TRelationship, TPerson, TStorySubmission } from '../../shared';
@@ -53,21 +54,11 @@
     story = await fetchStory(submission);
     events = parseOutEvents(story);
     statementPePs = parsePeopleFromEvents(events);
+    setStory(statementPePs);
+    playStory();
 
     // @ts-ignore
     viewer.loadScene('snow');
-
-    const enqueueNextLoop = () =>
-      setTimeout(() => {
-        if (currentStatement < statementPePs.length - 1) {
-          currentStatement++;
-          enqueueNextLoop();
-        } else {
-          viewer.loadScene('dusk');
-        }
-        return;
-      }, 5000);
-    enqueueNextLoop();
   };
 </script>
 
@@ -82,7 +73,7 @@
 
       {#if events.length !== 0}
         <!-- Problem! Dialog animations don't kick off after loop increments, because we are using onmount in the component -->
-        <Dialogue text={statementPePs[currentStatement].statement} character1={statementPePs[currentStatement].PeP.left[0]} character2={(statementPePs[currentStatement].PeP.right && statementPePs[currentStatement].PeP.right[0]) || ''} eventEmoji={statementPePs[currentStatement].PeP.eventEmoji} />
+        <Dialogue/>
       {/if}
     </content>
   </border>
