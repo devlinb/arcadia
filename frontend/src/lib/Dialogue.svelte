@@ -1,7 +1,13 @@
 <script>
   import { onMount } from 'svelte';
   import { fly, fade } from 'svelte/transition';
-  import { currentStatement, playStory, stopStory, previousStatement, nextStatement } from '../stores/story';
+  import {
+    currentStatement,
+    playStory,
+    stopStory,
+    previousStatement,
+    nextStatement,
+    resetStory } from '../stores/story';
   let text = $currentStatement.statement;
   let character1 = $currentStatement.PeP.left;
   let character2 = $currentStatement.PeP.right ;
@@ -38,6 +44,7 @@
   <button on:click={playStory}>play</button>
   <button on:click={stopStory}>stop</button>
   <button on:click={nextStatement}>next</button>
+  <button on:click={resetStory}>reset</button>
 </div>
 
 <style>
