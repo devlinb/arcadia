@@ -11,6 +11,7 @@
     { id: 5, name: 'Darleen', relationship: 'Younger Daughter' },
   ];
   let unusedRelationships: Set<TRelationship> = new Set(relationships);
+  unusedRelationships.delete('King');
   let people: Array<TPerson> = [{ id: 0, name: '', relationship: 'King' }];
   let screenSize;
 
@@ -161,10 +162,15 @@
     {#each people as person (person.id)}
       <div>
         <input type="text" maxlength="12" bind:value={person.name} placeholder="name" disabled={usePregen} required />
-        <select disabled={person.id === 0 || usePregen} value={person.relationship} on:change={(event) => handleOnSelectChange(person, event)}>
-          {#each relationships as relationship}
+        <select disabled={usePregen} value={person.relationship} on:change={(event) => handleOnSelectChange(person, event)}>
+        {#if person.id === 0}
+            <option value="King">King</option>
+            <option value="Queen">Queen</option>
+          {:else}
+            {#each relationships as relationship}
             <option value={relationship} hidden={!unusedRelationships.has(relationship)}>{relationship}</option>
-          {/each}
+            {/each}
+          {/if}
         </select>
       </div>
     {/each}
