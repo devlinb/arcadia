@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { TRelationship, TPerson, TStorySubmission } from '../../../shared/dist';
   export let onsubmit: (people: TStorySubmission) => void;
-  const relationships: Array<TRelationship> = ['King', 'Queen', 'Older Daughter', 'Younger Daughter', 'Older Son', 'Younger Son', 'General', 'Bishop', 'Advisor', "King's Brother", "Queen's Brother", "King's Newphew"];
+  const relationships: Array<TRelationship> = ['King', 'Older Daughter', 'Younger Daughter', 'Older Son', 'Younger Son', 'General', 'Queen', 'Bishop', 'Advisor', "King's Brother", "Queen's Brother", "King's Newphew"];
   const defaults: Array<TPerson> = [
     { id: 0, name: 'Henry', relationship: 'King' },
     { id: 1, name: 'Beth', relationship: 'Queen' },
@@ -13,6 +13,7 @@
   let unusedRelationships: Set<TRelationship> = new Set(relationships);
   unusedRelationships.delete('King');
   let people: Array<TPerson> = [{ id: 0, name: '', relationship: 'King' }];
+
   let screenSize;
 
   type TStates = 'intro' | 'kingdom' | 'ruler' | 'relatives';
@@ -36,11 +37,12 @@
     unusedRelationships = unusedRelationships;
   };
 
-  const handleOnRemove = () => {
-    unusedRelationships.add(people[people.length - 1].relationship);
-    people.pop();
-    people = people;
-  };
+  // Keeping this around in case we ever decide we want to re-add variable number of characters.
+  // const handleOnRemove = () => {
+  //   unusedRelationships.add(people[people.length - 1].relationship);
+  //   people.pop();
+  //   people = people;
+  // };
 
   const handleOnSelectChange = (person: TPerson, event: Event) => {
     const target = event.target as HTMLSelectElement;
@@ -92,6 +94,12 @@
         break;
     }
   };
+
+  handleOnAdd();
+  handleOnAdd();
+  handleOnAdd();
+  handleOnAdd();
+  handleOnAdd();
 </script>
 
 <svelte:window bind:innerWidth={screenSize} />
@@ -154,10 +162,8 @@
   <form on:submit|preventDefault={handleOnSubmit}>
     <p />
     <p />
-    Please name the important People in the Kingdom of {kingdom}
+    <div>Name the members in the royal house of <input type ="text" style="max-width: 100px" maxlength="20" bind:value={kingdom}/></div>
     <p />
-    <button on:click={handleOnAdd} disabled={people.length >= 6}>Add Person</button>
-    <button on:click={handleOnRemove} disabled={people.length === 1}>Remove Person</button>
 
     {#each people as person (person.id)}
       <div>
