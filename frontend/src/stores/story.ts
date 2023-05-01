@@ -30,8 +30,8 @@ export const setStory = (storyStatements: Array<TStatementPeP>) => {
 
 
 export const playStory = () => {
-  if (statements.length < 0) throw "No story assigned to tell";
-  if (statements.length <= statementIndex) return;
+  if (statements.length <= 0) throw "No story assigned to tell";
+  if (statements.length - 1 <= statementIndex) return;
 
   storyProgressTimer = setTimeout(() => {
     currentStatementStore.set(statements[statementIndex]);
@@ -61,7 +61,7 @@ export const previousStatement = () => {
 }
 
 export const nextStatement = () => {
-  if (statements.length > statementIndex) {
+  if (statements.length - 1 > statementIndex) {
     statementIndex++;
     currentStatementStore.set(statements[statementIndex]);
   }

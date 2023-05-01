@@ -1,16 +1,22 @@
 import { Request, Response } from 'express';
 import { Configuration, OpenAIApi } from "openai";
-import { TStorySubmission } from '../../../shared'
+import { TStorySubmission, TPerson } from '../../../shared'
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-export default async function postPrompt(req: Request, res: Response) {
+export default async function getPrompt(req: Request, res: Response) {
   console.log(`making a story`);
 
-  const submission = req.body as TStorySubmission;
+  const kingdom = req.query.kingdom as string;
+  const people: Array<TPerson> = JSON.parse(req.query.people as string);
+
+  const submission: TStorySubmission = {
+    kingdom,
+    people,
+    };
 
   let charactersStr = '';
 
@@ -103,35 +109,3 @@ If two characters talk, use a speech bubble between their names
 
 John and Sarah discussed what needed to happen to ensure the rebellion failed. (John 💬 Sarah)
 `;
-
-const characters = `
-Henry IV - King
-
-Queen Mary - Queen
-
-Princess Margaret - Oldest Princess
-
-Prince Timothy - Youngest Prince
-
-Tuck - Advisor
-
-Vance - Bishop
-
-Kingdom - Aragon
-`;
-
-const sampleResponse = `The sun had barely risen when King Henry IV awoke to a searing pain in his chest, gasping for air, his body began to convulse as his visor, Tuck, watched in horror (Henry IV 🤒 Tuck). The King's condition worsened, and the news reached the Queen, who was in a meeting with the Bishop Vance. They quickly made their way to the King's bedchamber, where he lay on his deathbed (Mary, Vance 👀 Henry IV 🤒).
-
-With the King's fate uncertain, Princess Margaret and Prince Timothy were called back to the royal palace. The Princess, next in line to the throne, was worried about her younger brother's claim to the throne if their father died (Margaret, Timothy 🤔).
-
-As the days went by, the King's health continued to worsen. The Queen spent hours at his bedside, praying for a miracle, while the Princess and the Prince spent their time preparing for the worst (Mary 👀 Henry IV 🤒, Margaret, Timothy 🗡️ Kingdom).
-
-Meanwhile, Vance was approached by a group of nobles who wanted to seize the throne for themselves. Vance, seeing an opportunity to gain more power, agreed to help them. They began to spread rumors about Princess Margaret's legitimacy, claiming that she was not the King's true daughter (Vance 💭 Margaret <🗣️> Nobles).
-
-The Princess, hearing of the rumors, was horrified. She knew that if they were true, her claim to the throne would be in jeopardy. She confided in her brother, who promised to protect her, no matter what (Margaret 💔 Timothy).
-
-As the King's health deteriorated, the Queen began to make plans to secure her own power. She knew that if the King died, she would have to act fast. She reached out to the nobles, promising them riches and titles if they helped her secure the throne (Mary 💭 Nobles <💰👑>).
-
-However, Vance had other plans. He had secretly hired an assassin to kill the Queen and the Princess, clearing the way for the nobles to take power (Vance 🗡️ Mary, Margaret).
-
-The day after the King's death, chaos erupted in the royal palace.The Queen and the Princess were found dead in their chambers, while Vance and the nobles seized control of the kingdom. Prince Timothy, the only member of the royal family left, fled from the castle, vowing to one day take back what was rightfully his (Timothy 💔 Kingdom).`;
