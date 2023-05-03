@@ -1,7 +1,7 @@
 import type { TRelationship, TPerson, TStorySubmission } from "../../../shared";
 
 export const fetchStory = async (submission: TStorySubmission): Promise<string> => {
-    //if (JSON.stringify(pregenCharacters) === JSON.stringify(submission)) return pregenStories[0].story;
+    if (JSON.stringify(pregenCharacters) === JSON.stringify(submission)) return pregenStories[0].story;
     const url = new URL(`${import.meta.env.VITE_API_SERVER}${import.meta.env.VITE_PROMPT_URL}`);
     url.searchParams.append('kingdom', submission.kingdom);
     url.searchParams.append('people', JSON.stringify(submission.people));
