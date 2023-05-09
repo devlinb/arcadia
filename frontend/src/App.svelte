@@ -1,8 +1,7 @@
 <script lang="ts">
   import Characters from './lib/StoryForm.svelte';
-  import { fetchStory } from './lib/StoryFetcher';
-  import { setStory, playStory } from './stores/story';
-  import { parseOutEvents, parsePeopleFromEvents, type TStatementPeP } from './lib/StoryParser';
+  import { fetchStory } from './lib/StoryFetcherws';
+  import { setStory, playStory, storyState } from './stores/story.svelte';
   import type { TStatementEvent } from './lib/StoryParser';
   import type { TRelationship, TPerson, TStorySubmission } from '../../shared';
   import townSnowUrl from '../src/assets/town_square_snow.jpg';
@@ -40,21 +39,8 @@
 
   import Dialogue from './lib/Dialogue.svelte';
 
-  let story = '';
-  let events: Array<TStatementEvent> = [];
-  let submitted = false;
-
-  let currentStatement = 0;
-
-  // Contains an array of statements, and split up characters and emojis that go with each statement.
-  let statementPePs: Array<TStatementPeP> = [];
-
   const handleCharacterSubmit = async (submission: TStorySubmission) => {
-    submitted = true;
-    story = await fetchStory(submission);
-    events = parseOutEvents(story);
-    statementPePs = parsePeopleFromEvents(events);
-    setStory(statementPePs);
+    await fetchStory(submission);
     playStory();
 
     // @ts-ignore
@@ -65,14 +51,14 @@
 <main>
   <border>
     <content>
-      {#if !submitted}
+      {#if $storyState === 'USER_INPUT'}
+      
         <div class="card">
           <Characters onsubmit={handleCharacterSubmit} />
         </div>
-      {/if}
-
-      {#if events.length !== 0}
-        <!-- Problem! Dialog animations don't kick off after loop increments, because we are using onmount in the component -->
+        {:else if $storyState === 'LOADING'}
+        <div>The bards are writing your tale</div>
+        {:else if $storyState === 'READY'}
         <Dialogue/>
       {/if}
     </content>

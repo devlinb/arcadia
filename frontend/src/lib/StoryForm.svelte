@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TRelationship, TPerson, TStorySubmission } from '../../../shared/dist';
+  import { usePregeneratedCharacters, usePregeneratedStory } from '../stores/story.svelte';
   export let onsubmit: (people: TStorySubmission) => void;
   const relationships: Array<TRelationship> = ['King', 'Older Daughter', 'Younger Daughter', 'Older Son', 'Younger Son', 'General', 'Queen', 'Bishop', 'Advisor', "King's Brother", "Queen's Brother", "King's Newphew"];
   const defaults: Array<TPerson> = [
@@ -63,11 +64,8 @@
       people.length = 0;
       for (const p of defaults) {
         people.push(p);
-        console.log('pushed');
         kingdom = 'Arcadia';
       }
-    } else {
-      people.length = 1;
     }
     people = people;
   };
@@ -156,8 +154,10 @@
   <!-- Desktop/Tablet -->
 {:else}
   <devcontrols>
-    <input type="checkbox" bind:checked={usePregen} id="pregenCheckbox" on:click={handleOnPregenClicked} />
-    <label for="pregenCheckbox">Pregenerated story?</label>
+    <input type="checkbox" bind:checked={$usePregeneratedCharacters} id="pregenCharactersCheckbox" on:click={handleOnPregenClicked} />
+    <label for="pregenCharactersCheckbox">Pregenerated characters?</label>
+    <input type="checkbox" disabled={!$usePregeneratedCharacters} bind:checked={$usePregeneratedStory} id="pregenStoryCheckbox" />
+    <label for="pregenStoryCheckbox">Pregenerated story?</label>
   </devcontrols>
   <form on:submit|preventDefault={handleOnSubmit}>
     <p />

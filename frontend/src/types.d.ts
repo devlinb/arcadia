@@ -7,3 +7,5 @@ export type TPerson = {
   name: string;
   relationship: TRelationship;
 }
+
+export type TStoryState = "USER_INPUT" | "LOADING" | "READY" | "FINISHED";

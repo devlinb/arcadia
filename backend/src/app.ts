@@ -10,7 +10,7 @@ import * as dotenv from 'dotenv';
 const envLoadResult = dotenv.config();
 console.log(`Environment: ${JSON.stringify(envLoadResult)}`);
 
-import postPrompt from "./routes/prompt"
+import getPromptws from './routes/promptws';
 import healthcheck from './routes/healthcheck';
 
 const app: express.Express = express();
@@ -25,12 +25,23 @@ app.use(cors(corsOptions));
 app.use(express.json());
 const router: Router = Router();
 
-router.get('/prompt', postPrompt);
 router.get('/healthcheck', healthcheck);
 
 app.use(router);
 
 
 const server = http.createServer(app);
+
+// Set up the WebSocket server for the '/promptws' endpoint
+server.on('upgrade', (req, socket, head) => {
+  console.log('got an upgrade request' + req.url);
+  if (req.url?.startsWith('/promptws')) {
+    console.log('for promptws');
+    getPromptws(req, socket, head);
+  } else {
+    console.log('wrong url destroying');
+    socket.destroy();
+  }
+});
 
 server.listen(3000);

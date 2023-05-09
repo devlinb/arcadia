@@ -2,43 +2,47 @@
   import { onMount } from 'svelte';
   import { fly, fade } from 'svelte/transition';
   import {
-    currentStatement,
+    currentDialogueLine,
+    currentEvent,
     playStory,
     stopStory,
     previousStatement,
     nextStatement,
-    resetStory } from '../stores/story';
-  let text = $currentStatement.statement;
-  let character1 = $currentStatement.PeP.left;
-  let character2 = $currentStatement.PeP.right ;
-  let eventEmoji = $currentStatement.PeP.eventEmoji;
-
+    resetStory } from '../stores/story.svelte';
   let key;
 
   // Whenever any either of the characters or if the eventEmoji changes, the key will change
   // which will cause all the divs to redraw which then triggers new animations
   $: {
-    key = JSON.stringify($currentStatement.PeP.left) + $currentStatement.PeP.eventEmoji + JSON.stringify($currentStatement.PeP.right);
+    if ($currentEvent){
+      key = $currentEvent.left[0] + $currentEvent.eventEmoji + ($currentEvent.right && $currentEvent.right[0]);
+    }
   }
 </script>
 
 <div class="card">
   <div class="story-line-container">
-    {$currentStatement.statement}
+    {$currentDialogueLine.statement}
   </div>
-  <div class="dialogue-container">
-    {#key key}
-      <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>
-        <div class="character" in:fly={{ x: -100, delay: 300, duration: 500 }}>{$currentStatement.PeP.left[0]}</div>
-        <div in:fade={{ delay: 600 }} class="speech-bubble">
-          {$currentStatement.PeP.eventEmoji}
+  {#if $currentDialogueLine.PeP } <!-- sometimes we have a story line and no action at all-->
+    <div class="dialogue-container">
+      {#key key}
+        <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>
+          <div class="character" in:fly={{ x: -100, delay: 300, duration: 500 }}>{$currentEvent.left[0]}</div>
+          <div in:fade={{ delay: 600 }} class="speech-bubble">
+            {$currentEvent.eventEmoji}
+          </div>
+          {#if $currentEvent.right}
+            <div class="character" in:fly={{ x: 100, delay: 300, duration: 500 }}>
+              {#each $currentEvent.right as person}
+              <div>{person}</div>
+              {/each}
+            </div>
+          {/if}
         </div>
-        {#if $currentStatement.PeP.right && $currentStatement.PeP.right[0] !== ''}
-          <div class="character" in:fly={{ x: 100, delay: 300, duration: 500 }}>{$currentStatement.PeP.right[0]}</div>
-        {/if}
-      </div>
-    {/key}
-  </div>
+      {/key}
+    </div>
+  {/if}
   <h1 id="card-header">Our story unfolds...</h1>
   <button on:click={previousStatement}>prev</button>
   <button on:click={playStory}>play</button>
@@ -89,8 +93,9 @@
     background: rgba(255, 255, 255, 0.8);
     /* background: linear-gradient(145deg, #ffe090, rgba(255, 255, 255, 0.5) 30px, rgba(255, 255, 255, 0.8) calc(100% - 30px), #ffe090); */
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     font-size: 0.8rem;
     font-weight: 700;
   }

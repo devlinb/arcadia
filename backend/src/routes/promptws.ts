@@ -1,52 +1,78 @@
 import { Request, Response } from 'express';
 import { Configuration, OpenAIApi } from "openai";
+import { Server as WebSocketServer } from 'ws';
 import { TStorySubmission, TPerson } from '../../../shared'
+import { parse as parseUrl, URLSearchParams } from 'url';
+import { IncomingMessage } from 'http';
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-export default async function getPrompt(req: Request, res: Response) {
-  console.log(`making a story`);
+// Initialize a WebSocket server
+const wss = new WebSocketServer({ noServer: true });
 
-  const kingdom = req.query.kingdom as string;
-  const people: Array<TPerson> = JSON.parse(req.query.people as string);
+wss.on('connection', async (ws, req) => {
+  console.log('making a story');
+
+  
+  const parsedUrl = parseUrl(req.url || '', true);
+  console.log(`parsedUrl: ${JSON.stringify(parsedUrl)}` );
+
+  const kingdom = parsedUrl.query.kingdom as string;
+  const people: Array<TPerson> = JSON.parse(parsedUrl.query.people as string);
 
   const submission: TStorySubmission = {
     kingdom,
     people,
-    };
+  };
 
   let charactersStr = '';
 
-  for( const p of submission.people ) {
-    charactersStr += `${p.name} - ${p.relationship}\n`;  
+  for (const p of submission.people) {
+    charactersStr += `${p.name} - ${p.relationship}\n`;
   }
 
   charactersStr += `\nKingdom - ${submission.kingdom}`;
-  
+
+  // Send "generating_story" message
+  ws.send(JSON.stringify({ type: 'generating_story' }));
+
   try {
     const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+      model: 'gpt-3.5-turbo',
       messages: [
-        { "role": "system", "content": systemPrompt },
-        { "role": "user", "content": initialPrompt },
-        { "role": "user", "content": charactersStr }
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: initialPrompt },
+        { role: 'user', content: charactersStr },
       ],
       temperature: 0.8,
       top_p: 1,
       presence_penalty: 0.5,
-      frequency_penalty: 0
+      frequency_penalty: 0,
     });
+
     const result = completion.data.choices[0].message?.content;
     console.log(result);
-    res.status(200).json({"story": result});
+
+    // Send the story result
+    ws.send(JSON.stringify({ type: 'story_line', payload: { story: result } }));
   } catch (e) {
     console.log(`got error: ${e}`);
-    res.status(400).json(JSON.stringify(e));
+
+    // Send the error
+    ws.send(JSON.stringify({ type: 'error', payload: { error: JSON.stringify(e) } }));
+  } finally {
+    // Close the WebSocket connection
+    ws.close();
   }
-  return;
+});
+
+export default function getPromptws(req: IncomingMessage, socket: any, head: Buffer) {
+  wss.handleUpgrade(req, socket, head, (ws) => {
+    wss.emit('connection', ws, req);
+  });
 }
 
 const systemPrompt = `
@@ -108,6 +134,4 @@ In a fierce battle, John fought Tim, John emerged victorious and was crowned kin
 If two characters talk, use a speech bubble between their names
 
 John and Sarah discussed what needed to happen to ensure the rebellion failed. (John 💬 Sarah)
-
-Do not put more than 1 newline between a paragraph and the actions it describes.
 `;
