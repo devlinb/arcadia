@@ -76,6 +76,7 @@
 
   .playback-controls {
     display: flex;
+    justify-content: space-around;
   }
 
   :global(.animate-out) {
