@@ -48,11 +48,13 @@
     </div>
   {/if}
   <h1 id="card-header">Our story unfolds...</h1>
-  <button on:click={previousStatement}>prev</button>
-  <button on:click={playStory}>play</button>
-  <button on:click={stopStory}>stop</button>
-  <button on:click={nextStatement}>next</button>
-  <button on:click={resetStory}>reset</button>
+  <div class="playback-controls">
+    <button on:click={previousStatement}>prev</button>
+    <button on:click={playStory}>play</button>
+    <button on:click={stopStory}>stop</button>
+    <button on:click={nextStatement}>next</button>
+    <button on:click={resetStory}>reset</button>
+  </div>
 </div>
 
 <style>
@@ -70,6 +72,10 @@
     overflow: hidden;
     height: 130px;
     max-height: 130px;
+  }
+
+  .playback-controls {
+    display: flex;
   }
 
   :global(.animate-out) {
