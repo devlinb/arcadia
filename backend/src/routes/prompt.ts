@@ -34,7 +34,7 @@ export default async function getPrompt(req: Request, res: Response) {
         { "role": "user", "content": initialPrompt },
         { "role": "user", "content": charactersStr }
       ],
-      temperature: 0.8,
+      top_p: 1,
       presence_penalty: 0.5,
       frequency_penalty: 0
     });
