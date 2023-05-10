@@ -36,7 +36,6 @@ const server = http.createServer(app);
 server.on('upgrade', (req, socket, head) => {
   console.log('got an upgrade request' + req.url);
   if (req.url?.startsWith('/promptws')) {
-    console.log('for promptws');
     getPromptws(req, socket, head);
   } else {
     console.log('wrong url destroying');

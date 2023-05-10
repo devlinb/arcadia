@@ -14,6 +14,7 @@
     default: {
       firstScene: 'day',
       sceneFadeDuration: 1000,
+      hfov: '45'
     },
     scenes: {
       snow: {
@@ -37,6 +38,10 @@
     },
   });
 
+  $: {
+    if ($storyState === 'FINISHED')
+    viewer.loadScene('dusk');
+  }
   import Dialogue from './lib/Dialogue.svelte';
 
   const handleCharacterSubmit = async (submission: TStorySubmission) => {

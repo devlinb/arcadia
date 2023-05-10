@@ -46,7 +46,10 @@ export const setStory = (storyStatements: Array<TStatementPeP>) => {
 export const playStory = () => {
   console.log('playing story');
   if (statements.length <= 0) throw "No story assigned to tell";
-  if (statements.length - 1 <= get(statementIndex)) return;
+  if (statements.length - 1 <= get(statementIndex)) {
+    storyState.set('FINISHED');
+    return;
+  }
 
   storyProgressTimer = setTimeout(() => {
     const stIndex = get(statementIndex);
