@@ -30,6 +30,7 @@ const parseEventsFromLine = (line: string): TStatementEvent => {
 // Returns an array of paragraphs and the events that happened in the paragraph
 export const parseOutEvents = (text: string): Array<TStatementEvent> => {
 
+  text = text.replace(/\.\n\n\(/g, "\. ("); // Sometimes gpt puts a few extra newlines in there.
   const embeddedEventsRegex = /\)(\.)? (\w)/g;
   text = text.replace(embeddedEventsRegex, ')$1\n\n$2');
 
