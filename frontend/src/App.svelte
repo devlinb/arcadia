@@ -65,6 +65,8 @@
         <div>The bards are writing your tale</div>
         {:else if $storyState === 'READY'}
         <Dialogue/>
+        {:else if $storyState === 'FINISHED'}
+        fin <!-- need to add summary here. -->
       {/if}
     </content>
   </border>

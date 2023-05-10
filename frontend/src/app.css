@@ -99,6 +99,7 @@ content {
   display: flex;
   justify-content: center;
   max-width: 500px;
+  min-width: 30ch;
   height: auto;
   text-align: center;
 }
