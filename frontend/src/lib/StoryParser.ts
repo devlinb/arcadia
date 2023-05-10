@@ -88,7 +88,7 @@ export const statementEventtoStatementPeP = (se: TStatementEvent): TStatementPeP
       .map(name => name.trim())
       .filter(name => name.length > 0);
 
-    if (isTerminal) {
+    if (isTerminal || parts[1] === '') {
       statementPep.PeP.push({ left, eventEmoji });
       continue;
     }
