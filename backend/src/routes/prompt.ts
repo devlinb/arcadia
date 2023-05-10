@@ -35,7 +35,6 @@ export default async function getPrompt(req: Request, res: Response) {
         { "role": "user", "content": charactersStr }
       ],
       temperature: 0.8,
-      top_p: 1,
       presence_penalty: 0.5,
       frequency_penalty: 0
     });
@@ -110,4 +109,6 @@ If two characters talk, use a speech bubble between their names
 John and Sarah discussed what needed to happen to ensure the rebellion failed. (John 💬 Sarah)
 
 Do not put more than 1 newline between a paragraph and the actions it describes.
+
+Do not write a response that is only dialogue between characters.
 `;
