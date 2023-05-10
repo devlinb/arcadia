@@ -28,7 +28,11 @@
     <div class="dialogue-container">
       {#key key}
         <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>
-          <div class="character" in:fly={{ x: -100, delay: 300, duration: 500 }}>{$currentEvent.left[0]}</div>
+          <div class="character" in:fly={{ x: -100, delay: 300, duration: 500 }}>
+            {#each $currentEvent.left as person}
+              <div>{person}</div>
+            {/each}
+          </div>
           <div in:fade={{ delay: 600 }} class="speech-bubble">
             {$currentEvent.eventEmoji}
           </div>
