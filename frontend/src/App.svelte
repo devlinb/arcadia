@@ -7,6 +7,8 @@
   import townSnowUrl from '../src/assets/town_square_snow.jpg';
   import townDayUrl from '../src/assets/town_square_day.jpg';
   import townDuskUrl from '../src/assets/town_square_dusk.jpg';
+  import StorySummary from './lib/StorySummary.svelte';
+
 
   import 'https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js';
   // @ts-ignore
@@ -66,7 +68,7 @@
         {:else if $storyState === 'READY'}
         <Dialogue/>
         {:else if $storyState === 'FINISHED'}
-        fin <!-- need to add summary here. -->
+        <StorySummary/>
       {/if}
     </content>
   </border>

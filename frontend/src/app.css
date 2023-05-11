@@ -51,6 +51,15 @@ body {
   /* text-shadow: 1px 1px 0px #fff; */
 }
 
+entirestory {
+  padding: 1rem 4rem 2rem;
+  color: #312300;
+  font-family: 'Berkshire Swash', cursive;
+  max-height: 80vh;
+  overflow-y: scroll;
+  text-align: justify;
+}
+
 .dialogue-container {
   padding: 2rem 0 1rem;
 }

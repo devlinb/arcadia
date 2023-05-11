@@ -7,7 +7,7 @@ import type { TStoryState } from '../types';
 /**
  * statements is the statement array of the current story
  */
-let statements: Array<TStatementPeP> = [];
+export let statements: Array<TStatementPeP> = [];
 
 let statementIndex: Writable<number> = writable(0); // What statement in the array we are currently on;
 let eventIndex: Writable<number> = writable(0); // What statement in the array we are currently on;
