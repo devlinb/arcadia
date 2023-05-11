@@ -47,7 +47,11 @@ export const playStory = () => {
   console.log('playing story');
   if (statements.length <= 0) throw "No story assigned to tell";
   if (statements.length - 1 <= get(statementIndex)) {
-    storyState.set('FINISHED');
+    setTimeout(() => {
+        storyState.set('FINISHED');
+      },
+      readingTimeInMilliseconds(statements[get(statementIndex)].statement)
+    );
     return;
   }
 
@@ -80,6 +84,8 @@ export const resetStory = () => {
   if (statements.length < 0) throw "No story assigned to tell";
   statementIndex.set(0);
   eventIndex.set(0);
+  stopStory();
+  playStory();
 }
 
 export const previousStatement = () => {
@@ -87,6 +93,7 @@ export const previousStatement = () => {
     eventIndex.set(0);
     statementIndex.set(get(statementIndex) - 1);
   }
+  stopStory();
 }
 
 export const nextStatement = () => {
@@ -94,6 +101,7 @@ export const nextStatement = () => {
     eventIndex.set(0);
     statementIndex.set(get(statementIndex) + 1);
   }
+  stopStory();
 }
 
 const readingTimeInMilliseconds = (text: string): number => {
