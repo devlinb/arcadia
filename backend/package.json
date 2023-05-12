@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "node ./dist/app.js",
-    "dev": "ts-node-dev ./src/app.ts"
+    "dev": "ts-node-dev ./src/app.ts",
+    "debug": "node --inspect ./dist/app.js"
   },
   "author": "Devlin Bentley",
   "license": "MIT",
