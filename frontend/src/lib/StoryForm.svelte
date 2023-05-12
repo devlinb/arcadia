@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { TRelationship, TPerson, TStorySubmission } from '../../../shared/dist';
-  import { usePregeneratedCharacters, usePregeneratedStory } from '../stores/story.svelte';
+  import { usePregeneratedCharacters, usePregeneratedStory, relationshipMap } from '../stores/story.svelte';
   export let onsubmit: (people: TStorySubmission) => void;
   const relationships: Array<TRelationship> = ['King', 'Older Daughter', 'Younger Daughter', 'Older Son', 'Younger Son', 'General', 'Queen', 'Bishop', 'Advisor', "King's Brother", "Queen's Brother", "King's Newphew"];
   const defaults: Array<TPerson> = [
@@ -56,6 +56,9 @@
   };
 
   const handleOnSubmit = () => {
+    for (const person of people) {
+      relationshipMap[person.name] = person.relationship;
+    }
     onsubmit({ kingdom, people });
   };
 

@@ -1,13 +1,19 @@
 <script lang="ts" context="module">
 import { writable, readonly, derived, type Readable, get } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import type { TPeopleEventPeople, TStatementPeP } from '../lib/StoryParser';
+import type { TPeopleEventPeople, TRelationship, TStatementPeP } from '../../../shared';
 import type { TStoryState } from '../types';
 
 /**
  * statements is the statement array of the current story
  */
 export let statements: Array<TStatementPeP> = [];
+
+// TODO: Do this properly
+type TNamesToRelationship = {
+  [key: string]: TRelationship;
+};
+export let relationshipMap: TNamesToRelationship = {};
 
 let statementIndex: Writable<number> = writable(0); // What statement in the array we are currently on;
 let eventIndex: Writable<number> = writable(0); // What statement in the array we are currently on;

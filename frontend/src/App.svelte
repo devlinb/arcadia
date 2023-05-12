@@ -1,9 +1,8 @@
 <script lang="ts">
   import Characters from './lib/StoryForm.svelte';
   import { fetchStory } from './lib/StoryFetcherws';
-  import { setStory, playStory, storyState } from './stores/story.svelte';
-  import type { TStatementEvent } from './lib/StoryParser';
-  import type { TRelationship, TPerson, TStorySubmission } from '../../shared';
+  import { playStory, storyState } from './stores/story.svelte';
+  import type { TStorySubmission } from '../../shared';
   import townSnowUrl from '../src/assets/town_square_snow.jpg';
   import townDayUrl from '../src/assets/town_square_day.jpg';
   import townDuskUrl from '../src/assets/town_square_dusk.jpg';
