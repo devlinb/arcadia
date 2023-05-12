@@ -4,6 +4,7 @@
     "composite": true,
     "rootDir": ".",
     "outDir": "./dist",
-    "module": "commonjs"
+    "module": "commonjs",
+    "lib": ["ES2021"]
   }
 }
