@@ -2,7 +2,7 @@ import type { TRelationship, TPerson, TStorySubmission } from "../../../shared";
 import { get } from 'svelte/store'
 
 import { setStory, storyState, usePregeneratedStory } from '../stores/story.svelte';
-import { parseOutEvents, statementEventsToStatementPeps } from "./StoryParser";
+import { parseOutEvents, statementEventsToStatementPeps } from "../../../shared";
 
 export const fetchStory = async (submission: TStorySubmission): Promise<void> => {
   const url = new URL(`${import.meta.env.VITE_API_SERVER_WS}${import.meta.env.VITE_PROMPT_URL_WS}`);
@@ -43,9 +43,7 @@ export const fetchStory = async (submission: TStorySubmission): Promise<void> =>
           inProgress = false;
           storyState.set('READY');
           console.log('Story received:', payload.story);
-          const events = parseOutEvents(payload.story as string);
-          const statementPePs = statementEventsToStatementPeps(events);
-          setStory(statementPePs);
+          setStory(payload);
           resolve();
 
           break;

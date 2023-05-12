@@ -1,19 +1,8 @@
-import type { TPerson } from "../../../shared";
+import type { TStatementPeP } from "./types";
 
 export type TStatementEvent = {
   statement: string;
   event?: Array<string>; // Full event string like "(Martin 🤝 Gregory 👑 Kingdom)""
-}
-
-export type TPeopleEventPeople = {
-  left: Array<string>;
-  eventEmoji: string; // Just the emoji
-  right?: Array<string>;
-}
-
-export type TStatementPeP = {
-  statement: string;
-  PeP?: Array<TPeopleEventPeople>;
 }
 
 const parseEventsFromLine = (line: string): TStatementEvent => {

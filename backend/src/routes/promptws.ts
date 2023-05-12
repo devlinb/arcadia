@@ -1,9 +1,13 @@
-import { Request, Response } from 'express';
-import { Configuration, OpenAIApi } from "openai";
-import { Server as WebSocketServer } from 'ws';
-import { TStorySubmission, TPerson } from '../../../shared'
-import { parse as parseUrl, URLSearchParams } from 'url';
 import { IncomingMessage } from 'http';
+import { Configuration, OpenAIApi } from 'openai';
+import { URLSearchParams, parse as parseUrl } from 'url';
+import { Server as WebSocketServer } from 'ws';
+import {
+  TPerson,
+  TStorySubmission,
+  parseOutEvents,
+  statementEventsToStatementPeps
+} from '../../../shared/';
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -16,9 +20,8 @@ const wss = new WebSocketServer({ noServer: true });
 wss.on('connection', async (ws, req) => {
   console.log('making a story');
 
-  
   const parsedUrl = parseUrl(req.url || '', true);
-  console.log(`parsedUrl: ${JSON.stringify(parsedUrl)}` );
+  console.log(`parsedUrl: ${JSON.stringify(parsedUrl)}`);
 
   const kingdom = parsedUrl.query.kingdom as string;
   const people: Array<TPerson> = JSON.parse(parsedUrl.query.people as string);
@@ -57,7 +60,9 @@ wss.on('connection', async (ws, req) => {
     console.log(result);
 
     // Send the story result
-    ws.send(JSON.stringify({ type: 'story_line', payload: { story: result } }));
+    const events = parseOutEvents(result as string);
+    const statementPePs = statementEventsToStatementPeps(events);
+    ws.send(JSON.stringify({ type: 'story_line', payload: statementPePs }));
   } catch (e) {
     console.log(`got error: ${e}`);
 
