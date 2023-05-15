@@ -7,7 +7,7 @@ import {
   TStorySubmission,
   parseOutEvents,
   statementEventsToStatementPeps
-} from '../../../shared/';
+} from '../shared/';
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
