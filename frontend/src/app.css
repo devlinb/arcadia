@@ -101,7 +101,7 @@ border {
 content {
   background: linear-gradient(145deg, #ffecbb, #fff5dd, #ffefc4, #fff7e2);
   background-color: rgb(255, 245, 223);
-  background-image: url(black-felt.png);
+  background-image: url(assets/black-felt.png);
   background-blend-mode: color-burn;
   border-radius: 4px;
   opacity: 95%;
