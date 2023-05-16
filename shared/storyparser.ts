@@ -46,11 +46,12 @@ export const statementEventsToStatementPeps =
 }
 
 
-// Parses characters out of Events.
-// Only worries about the first "event" emoji in a given string, E.g. for the string
-// (Martin 🤔 Gregory 🤔 Henry 👑)
-// this function will only be concerned about "Martin 🤔 Gregory"
-// For events like (Henry 🤒) it will return Henry and 🤒 as the event.
+// Parses People out of Events.
+// An such as "(Martin 🤔 Gregory 🤔 Henry 👑)" comes in, a PeP is an array of these:
+// {left: ["Martin"], event: "🤔", right: ["Gregory", "Martin"] }
+// Previously right was the entire string "Gregory 🤔 Henry 👑" which is higher fidelity
+// but proves hard to draw with portraits. 
+// For events without a right sided person, like (Henry 🤒) it will return ["Henry"] and 🤒 as the event.
 export const statementEventtoStatementPeP = (se: TStatementEvent): TStatementPeP => {
   
   let statementPep: TStatementPeP = { statement: se.statement };
@@ -90,8 +91,11 @@ export const statementEventtoStatementPeP = (se: TStatementEvent): TStatementPeP
       continue;
     }
 
+    // For now we are going to strip emjois from the right hand string.
+    // Ideally our structure would be recursive instead, to at least 1 layer deep.
     const right = parts[1]
-      .replace(/[()]/g, '') 
+      .replace(/[()]/g, '')
+      .replace(extendedEmojiRegex, ',')
       .split(',')
       .map(name => name.trim())
       .filter(name => name.length > 0);
