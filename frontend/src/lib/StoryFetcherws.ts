@@ -11,7 +11,7 @@ export const fetchStory = async (submission: TStorySubmission): Promise<void> =>
   console.log(`url: ${url}`);
   
   if (get(usePregeneratedStory)) {
-    const events = parseOutEvents(pregenStories[0].story);
+    const events = parseOutEvents(pregenStories[2].story);
     const statementPePs = statementEventsToStatementPeps(events);
     setStory(statementPePs);
     storyState.set('READY');
