@@ -60,9 +60,16 @@ export const statementEventtoStatementPeP = (se: TStatementEvent): TStatementPeP
   for ( const event of se.event ) {    
     const terminalEmojis = ['🤒', '👑'];
 
-    // Update the regex to match a broader range of emojis
-    const emojiRegex = /[\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{1FAB0}-\u{1FABF}\u{1FAC0}-\u{1FACF}\u{1FAD0}-\u{1FADF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}]/gu;
-    const matches = event.match(emojiRegex);
+    /* 
+      Some emojis consist of multiple characters, an initial pictograph and a second unicode codepoint
+      that means "display this as an emoji". The extended emoji regex tries to capture these multi-char emojis.
+      Simpler regexs leave behind an invalid unicode string by not removing the entire 2 codepoint sequence.
+      However the below sequence properly removes one or two codepoints based on need.
+      https://stackoverflow.com/questions/43242440/javascript-regular-expression-for-unicode-emoji
+    */
+    const extendedEmojiRegex = /\p{RI}\p{RI}|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?(\u{200D}\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?)+|\p{EPres}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})?|\p{Emoji}(\p{EMod}+|\u{FE0F}\u{20E3}?|[\u{E0020}-\u{E007E}]+\u{E007F})/gu;
+    
+    const matches = event.match(extendedEmojiRegex);
 
     if (!matches || matches.length === 0) {
       continue;
@@ -84,7 +91,7 @@ export const statementEventtoStatementPeP = (se: TStatementEvent): TStatementPeP
     }
 
     const right = parts[1]
-      .replace(/[()]/g, '')
+      .replace(/[()]/g, '') 
       .split(',')
       .map(name => name.trim())
       .filter(name => name.length > 0);
