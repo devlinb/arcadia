@@ -11,6 +11,7 @@
     resetStory,
     relationshipMap } from '../stores/story.svelte';
   import type { TRelationship } from '../../../shared/dist';
+  import PeopleCard from './PeopleCard.svelte';
 
   
   import kingUrl from '../assets/king.jpg';
@@ -57,23 +58,12 @@
     <div class="dialogue-container">
       {#key key}
         <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>
-          <div class="character" in:fly={{ x: -100, delay: 300, duration: 500 }}>
-            {#each $currentEvent.left as person}
-            {#if relationshipMap[person] && relationshipToUrl(relationshipMap[person]) !== 'none'}
-            <img class="character-portrait" src={relationshipToUrl(relationshipMap[person])} alt="king" />
-            {/if}
-            <div class="character-name-label">{person}</div>
-            {/each}
-          </div>
+          <PeopleCard people={$currentEvent.left} flyInFrom={'left'}/>
           <div in:fade={{ delay: 600 }} class="speech-bubble">
             {$currentEvent.eventEmoji}
           </div>
           {#if $currentEvent.right}
-            <div class="character" in:fly={{ x: 100, delay: 300, duration: 500 }}>
-              {#each $currentEvent.right as person}
-              <div>{person}</div>
-              {/each}
-            </div>
+            <PeopleCard people={$currentEvent.right} flyInFrom={'right'}/>
           {/if}
         </div>
       {/key}
@@ -125,34 +115,6 @@
     grid-row: 1;
     height: 100px;
     width: 100%;
-  }
-
-  .character {
-    width: 100px;
-    height: 130px;
-    border-radius: 4px;
-    /* border: 1px solid rgba(0, 0, 0, 0.2); */
-    box-shadow: -1px -1px 1px #ffd875;
-    background: rgba(255, 255, 255, 0.8);
-    /* background: linear-gradient(145deg, #ffe090, rgba(255, 255, 255, 0.5) 30px, rgba(255, 255, 255, 0.8) calc(100% - 30px), #ffe090); */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    font-size: 0.8rem;
-    font-weight: 700;
-  }
-
-  .character-portrait {
-    display: flex;
-    max-width: 100%;
-    flex: 1;
-  }
-
-  .character-name-label {
-    display: flex;
-    flex: 1;
-    align-items: center;
   }
 
   .speech-bubble {
