@@ -1,16 +1,15 @@
-
 import express from 'express';
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import cors from 'cors';
 
-import http from "http";
-import fs from "fs";
+import http from 'http';
 
 import * as dotenv from 'dotenv';
 const envLoadResult = dotenv.config();
 console.log(`Environment: ${JSON.stringify(envLoadResult)}`);
 
 import getPromptws from './routes/promptws';
+import getPrompt from './routes/prompt';
 import healthcheck from './routes/healthcheck';
 
 const app: express.Express = express();
@@ -26,9 +25,8 @@ app.use(express.json());
 const router: Router = Router();
 
 router.get('/healthcheck', healthcheck);
-
+router.get('/prompt', getPrompt);
 app.use(router);
-
 
 const server = http.createServer(app);
 

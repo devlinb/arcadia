@@ -1,12 +1,12 @@
 import { IncomingMessage } from 'http';
 import { Configuration, OpenAIApi } from 'openai';
-import { URLSearchParams, parse as parseUrl } from 'url';
+import { parse as parseUrl } from 'url';
 import { Server as WebSocketServer } from 'ws';
 import {
   TPerson,
   TStorySubmission,
   parseOutEvents,
-  statementEventsToStatementPeps
+  statementEventsToStatementPeps,
 } from '../shared/';
 
 const configuration = new Configuration({
@@ -67,14 +67,21 @@ wss.on('connection', async (ws, req) => {
     console.log(`got error: ${e}`);
 
     // Send the error
-    ws.send(JSON.stringify({ type: 'error', payload: { error: JSON.stringify(e) } }));
+    ws.send(
+      JSON.stringify({ type: 'error', payload: { error: JSON.stringify(e) } })
+    );
   } finally {
     // Close the WebSocket connection
     ws.close();
   }
 });
 
-export default function getPromptws(req: IncomingMessage, socket: any, head: Buffer) {
+export default function getPromptws(
+  req: IncomingMessage,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  socket: any,
+  head: Buffer
+) {
   wss.handleUpgrade(req, socket, head, (ws) => {
     wss.emit('connection', ws, req);
   });
