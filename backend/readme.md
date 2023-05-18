@@ -16,5 +16,4 @@ npm install
 npm run dev
 ```
 
-Generating a story can take a long time, and the front end doesn't have any status indicators yet, so be patient.
-p
+ChatGPT3.5 takes around 30 seconds to generate a story.
