@@ -6,8 +6,8 @@ Welcome to Arcadia, the AI Medieval Drama Simulator. This project is an experime
 Note the latest stable version is always hosted at https://www.generativestorytelling.ai
 
 Arcadia highlights the use of LLMs to generate animated narratives, detailing the drama in a royal court of your choosing. List the names of your friends and family, and watch as they betray, poison, marry, and stab one another to take control of the Kingdom!
+![Screenshot of generativestorytelling.ai showing an advisor warning a king that his wife plans to overthrow him](https://github.com/devlinb/arcadia/assets/11895351/f229ef77-c066-4bcb-aa78-49b7ad3c2ed5)
 
-![Screenshot of generativestorytelling.ai showing an advisor warning a king that his wife plans to overthrow him](/assets/screenshot.jpg).
 
 ## Tools used
 Narration is provided by GPT 3.5
@@ -55,7 +55,9 @@ To run the project, do the following:
 2. (optional if you want to run the backend yourself) in the root folder of `backend` create a file `.env` and populate it with `OPENAI_API_KEY=` and fill in your key.  
 3. In each of `shared`, `backend` and `frontend` do `npm install` and `npm build`
 4. You can run just the front end and view the pregenerated stories, do to so go to `frontend` and enter `npm run dev` that will start up vite, and you can connect to `http://localhost:5173/`, select both checkboxes up top and then `make some drama`.
-![Two checkboxes at top of the screen selected, one labeled "Pregenerated Character" the other labeled "Pregenerated Story"](/assets/checkboxes.jpg)
+![Two checkboxes at top of the screen selected, one labeled "Pregenerated Character" the other labeled "Pregenerated Story"](https://github.com/devlinb/arcadia/assets/11895351/8f7653f3-098b-4916-a34e-6ecd10f41a75)
+
+
   a. To alter which pregenerated story is displayed, you can change the index on line 14 of [StoryFetcherws.ts](/frontend/src/lib/StoryFetcherws.ts) 
 
     `const events = parseOutEvents(pregenStories[2].story);`
@@ -75,3 +77,4 @@ Upcoming features:
 6. Fixes for the navigation button UX
    a. Buttons need styling
    b. Buttons need proper state handling
+7. Needs a complete accessibility passthrough.
