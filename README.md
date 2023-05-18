@@ -72,3 +72,6 @@ Upcoming features:
 3. Music
 4. Sound effects triggers off of emojis
 5. The ability to save, replay, and share stories.
+6. Fixes for the navigation button UX
+   a. Buttons need styling
+   b. Buttons need proper state handling
