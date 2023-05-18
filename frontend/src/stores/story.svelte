@@ -1,13 +1,13 @@
 <script lang="ts" context="module">
 import { writable, derived, type Readable, get } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import type { TPeopleEventPeople, TRelationship, TStatementPeP } from '../../../shared';
+import type { TCharactersEventCharacters, TRelationship, TStatementCeC } from '../../../shared';
 import type { TStoryState } from '../types';
 
 /**
  * statements is the statement array of the current story
  */
-export let statements: Array<TStatementPeP> = [];
+export let statements: Array<TStatementCeC> = [];
 
 // TODO: Do this properly
 type TNamesToRelationship = {
@@ -22,10 +22,10 @@ export const currentDialogueLine = derived(
   $statementIndex => statements[$statementIndex]
 );
 
-export const currentEvent: Readable<TPeopleEventPeople> = derived(
+export const currentEvent: Readable<TCharactersEventCharacters> = derived(
   [statementIndex, eventIndex],
   ([$statementIndex, $eventIndex]) => {
-    if (statements[$statementIndex].PeP) return statements[$statementIndex].PeP[$eventIndex];
+    if (statements[$statementIndex].CeC) return statements[$statementIndex].CeC[$eventIndex];
     return null;
   }
 );
@@ -42,7 +42,7 @@ let storyProgressTimer: ReturnType<typeof setTimeout>;
  * the new story will replace the current story and the story position will be 
  * set to the beginning.
  */
-export const setStory = (storyStatements: Array<TStatementPeP>) => {
+export const setStory = (storyStatements: Array<TStatementCeC>) => {
   statements = storyStatements;
   statementIndex.set(0);
   eventIndex.set(0);
@@ -64,7 +64,7 @@ export const playStory = () => {
   storyProgressTimer = setTimeout(() => {
     const stIndex = get(statementIndex);
     const evIndex = get(eventIndex);
-    if (statements[stIndex].PeP && statements[stIndex].PeP.length - 1 > evIndex) {
+    if (statements[stIndex].CeC && statements[stIndex].CeC.length - 1 > evIndex) {
       eventIndex.set(evIndex + 1);
     } else {
       eventIndex.set(0);
@@ -76,8 +76,8 @@ export const playStory = () => {
     If we have multiple events, divide estimated reading time of the paragraph by the number of events we need 
     are going to show. If only a single event, just use the estimated reading time for the paragraph.
   */
-  statements[get(statementIndex)].PeP
-  ? readingTimeInMilliseconds(statements[get(statementIndex)].statement) / statements[get(statementIndex)].PeP.length
+  statements[get(statementIndex)].CeC
+  ? readingTimeInMilliseconds(statements[get(statementIndex)].statement) / statements[get(statementIndex)].CeC.length
   : readingTimeInMilliseconds(statements[get(statementIndex)].statement)
   );
 }

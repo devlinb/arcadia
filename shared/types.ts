@@ -12,7 +12,7 @@ export type TRelationship =
   | "Queen's Brother"
   | "King's Newphew";
 
-export type TPerson = {
+export type TCharacter = {
   id: number;
   name: string;
   relationship: TRelationship;
@@ -20,16 +20,16 @@ export type TPerson = {
 
 export type TStorySubmission = {
   kingdom: string;
-  people: Array<TPerson>;
+  characters: Array<TCharacter>;
 };
 
-export type TPeopleEventPeople = {
+export type TCharactersEventCharacters = {
   left: Array<string>;
   eventEmoji: string; // Just the emoji
   right?: Array<string>;
 };
 
-export type TStatementPeP = {
+export type TStatementCeC = {
   statement: string;
-  PeP?: Array<TPeopleEventPeople>;
+  CeC?: Array<TCharactersEventCharacters>;
 };

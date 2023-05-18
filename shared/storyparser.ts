@@ -1,4 +1,4 @@
-import type { TStatementPeP } from './types';
+import type { TStatementCeC } from './types';
 
 export type TStatementEvent = {
   statement: string;
@@ -36,8 +36,8 @@ export const parseOutEvents = (text: string): Array<TStatementEvent> => {
 
 export const statementEventsToStatementPeps = (
   events: Array<TStatementEvent>
-): Array<TStatementPeP> => {
-  const result: TStatementPeP[] = [];
+): Array<TStatementCeC> => {
+  const result: TStatementCeC[] = [];
   for (const statementEvent of events) {
     result.push(statementEventtoStatementPeP(statementEvent));
   }
@@ -45,7 +45,7 @@ export const statementEventsToStatementPeps = (
   return result;
 };
 
-// Parses People out of Events.
+// Parses Characters out of Events.
 // An such as "(Martin 🤔 Gregory 🤔 Henry 👑)" comes in, a PeP is an array of these:
 // {left: ["Martin"], event: "🤔", right: ["Gregory", "Martin"] }
 // Previously right was the entire string "Gregory 🤔 Henry 👑" which is higher fidelity
@@ -53,11 +53,11 @@ export const statementEventsToStatementPeps = (
 // For events without a right sided person, like (Henry 🤒) it will return ["Henry"] and 🤒 as the event.
 export const statementEventtoStatementPeP = (
   se: TStatementEvent
-): TStatementPeP => {
-  const statementPep: TStatementPeP = { statement: se.statement };
-  if (se.event === undefined) return statementPep;
+): TStatementCeC => {
+  const statementCec: TStatementCeC = { statement: se.statement };
+  if (se.event === undefined) return statementCec;
 
-  statementPep.PeP = [];
+  statementCec.CeC = [];
   for (const event of se.event) {
     const terminalEmojis = ['🤒', '👑'];
 
@@ -88,7 +88,7 @@ export const statementEventtoStatementPeP = (
       .filter((name) => name.length > 0);
 
     if (isTerminal || parts[1] === '') {
-      statementPep.PeP.push({ left, eventEmoji });
+      statementCec.CeC.push({ left, eventEmoji });
       continue;
     }
 
@@ -100,7 +100,7 @@ export const statementEventtoStatementPeP = (
       .split(',')
       .map((name) => name.trim())
       .filter((name) => name.length > 0);
-    statementPep.PeP.push({ left, eventEmoji, right });
+    statementCec.CeC.push({ left, eventEmoji, right });
   }
-  return statementPep;
+  return statementCec;
 };

@@ -3,7 +3,7 @@ import { Configuration, OpenAIApi } from 'openai';
 import { parse as parseUrl } from 'url';
 import { Server as WebSocketServer } from 'ws';
 import {
-  TPerson,
+  TCharacter,
   TStorySubmission,
   parseOutEvents,
   statementEventsToStatementPeps,
@@ -28,22 +28,26 @@ wss.on('connection', async (ws, req) => {
   const kingdomFull = parsedUrl.query.kingdom as string;
   const kingdom =
     kingdomFull.length > 20 ? kingdomFull.substring(0, 20) : kingdomFull;
-  const people: Array<TPerson> = JSON.parse(parsedUrl.query.people as string);
+  const characters: Array<TCharacter> = JSON.parse(
+    parsedUrl.query.characters as string
+  );
   // Truncade the st
-  people.forEach(
-    (person, i) =>
-      (people[i].name =
-        person.name.length > 12 ? person.name.substring(0, 12) : person.name)
+  characters.forEach(
+    (character, i) =>
+      (characters[i].name =
+        character.name.length > 12
+          ? character.name.substring(0, 12)
+          : character.name)
   );
 
   const submission: TStorySubmission = {
     kingdom,
-    people,
+    characters,
   };
 
   let charactersStr = '';
 
-  for (const p of submission.people) {
+  for (const p of submission.characters) {
     charactersStr += `${p.name} - ${p.relationship}\n`;
   }
 

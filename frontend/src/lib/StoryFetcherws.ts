@@ -15,7 +15,7 @@ import { parseOutEvents, statementEventsToStatementPeps } from "../../../shared/
 export const fetchStory = async (submission: TStorySubmission): Promise<void> => {
   const url = new URL(`${import.meta.env.VITE_API_SERVER_WS}${import.meta.env.VITE_PROMPT_URL_WS}`);
   url.searchParams.append('kingdom', submission.kingdom);
-  url.searchParams.append('people', JSON.stringify(submission.people));
+  url.searchParams.append('characters', JSON.stringify(submission.characters));
   console.log(`url: ${url}`);
   
   if (get(usePregeneratedStory)) {

@@ -1,15 +1,17 @@
 <script lang="ts">
-  import type { TRelationship, TPerson, TStorySubmission } from '../../../shared/dist';
+  import type { TRelationship, TCharacter, TStorySubmission } from '../../../shared/dist';
   import { usePregeneratedCharacters, usePregeneratedStory, relationshipMap } from '../stores/story.svelte';
 
   /**
    * This file collects the kingdom name and the name of all the characters. All characters have a name and a relationship 
    * to the ruler, the ruler is the first character in list and is always a king or a queen.
+   * 
+   * We use the "unusedRelationships" set to track what relationships are still available to select. 
    */
 
-  export let onsubmit: (people: TStorySubmission) => void;
+  export let onsubmit: (characters: TStorySubmission) => void;
   const relationships: Array<TRelationship> = ['King', 'Older Daughter', 'Younger Daughter', 'Older Son', 'Younger Son', 'General', 'Queen', 'Bishop', 'Advisor', "King's Brother", "Queen's Brother", "King's Newphew"];
-  const defaults: Array<TPerson> = [
+  const defaults: Array<TCharacter> = [
     { id: 0, name: 'Henry', relationship: 'King' },
     { id: 1, name: 'Beth', relationship: 'Queen' },
     { id: 2, name: 'Martin', relationship: 'Older Son' },
@@ -19,51 +21,51 @@
   ];
   let unusedRelationships: Set<TRelationship> = new Set(relationships);
   unusedRelationships.delete('King');
-  let people: Array<TPerson> = [{ id: 0, name: '', relationship: 'King' }];
+  let characters: Array<TCharacter> = [{ id: 0, name: '', relationship: 'King' }];
 
   let usePregen: boolean = false;
 
   let kingdom: string = 'Arcadia';
   const handleOnAdd = () => {
-    people.push({ id: people.length, name: '', relationship: [...unusedRelationships][0] });
-    people = people;
+    characters.push({ id: characters.length, name: '', relationship: [...unusedRelationships][0] });
+    characters = characters;
     unusedRelationships.delete([...unusedRelationships][0]);
     unusedRelationships = unusedRelationships;
   };
 
   // Keeping this around in case we ever decide we want to re-add variable number of characters.
   // const handleOnRemove = () => {
-  //   unusedRelationships.add(people[people.length - 1].relationship);
-  //   people.pop();
-  //   people = people;
+  //   unusedRelationships.add(characters[characters.length - 1].relationship);
+  //   characters.pop();
+  //   characters = characters;
   // };
 
-  const handleOnSelectChange = (person: TPerson, event: Event) => {
+  const handleOnSelectChange = (character: TCharacter, event: Event) => {
     const target = event.target as HTMLSelectElement;
     const relationship = target.value as TRelationship;
 
-    unusedRelationships.add(person.relationship);
-    person.relationship = relationship as TRelationship;
+    unusedRelationships.add(character.relationship);
+    character.relationship = relationship as TRelationship;
     unusedRelationships.delete(relationship);
     unusedRelationships = unusedRelationships;
   };
 
   const handleOnSubmit = () => {
-    for (const person of people) {
-      relationshipMap[person.name] = person.relationship;
+    for (const character of characters) {
+      relationshipMap[character.name] = character.relationship;
     }
-    onsubmit({ kingdom, people });
+    onsubmit({ kingdom, characters });
   };
 
   const handleOnPregenClicked = (e) => {
     if (e.currentTarget.checked) {
-      people.length = 0;
+      characters.length = 0;
       for (const p of defaults) {
-        people.push(p);
+        characters.push(p);
         kingdom = 'Arcadia';
       }
     }
-    people = people;
+    characters = characters;
   };
 
   handleOnAdd();
@@ -83,11 +85,11 @@
   </devcontrols>
   <form class="storyForm" on:submit|preventDefault={handleOnSubmit}>
     <div>Name the members in the royal house of <input type ="text" style="max-width: 100px" maxlength="20" bind:value={kingdom}/></div>
-    {#each people as person (person.id)}
+    {#each characters as character (character.id)}
       <nameentry>
-        <input type="text" maxlength="12" bind:value={person.name} placeholder="name" disabled={usePregen} required />
-        <select disabled={usePregen} value={person.relationship} on:change={(event) => handleOnSelectChange(person, event)}>
-        {#if person.id === 0}
+        <input type="text" maxlength="12" bind:value={character.name} placeholder="name" disabled={usePregen} required />
+        <select disabled={usePregen} value={character.relationship} on:change={(event) => handleOnSelectChange(character, event)}>
+        {#if character.id === 0}
             <option value="King">King</option>
             <option value="Queen">Queen</option>
           {:else}
@@ -98,8 +100,8 @@
         </select>
       </nameentry>
     {/each}
-    <button type="submit" disabled={people.length < 5}>
-      {#if people.length < 5}
+    <button type="submit" disabled={characters.length < 5}>
+      {#if characters.length < 5}
         At least 5 characters are needed for a story!
       {:else}Make some drama!
       {/if}

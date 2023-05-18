@@ -15,6 +15,8 @@
 
   // Whenever any either of the characters or if the eventEmoji changes, the key will change
   // which will cause all the divs to redraw, which will then trigger new slide in and out animations.
+  // There is an edge case bug where if two lines have the same characters and the same emoji, the 
+  // animation won't be repeated, but this isn't the end of the world.
   $: {
     if ($currentEvent){
       key = $currentEvent.left[0] + $currentEvent.eventEmoji + ($currentEvent.right && $currentEvent.right[0]);
@@ -26,7 +28,7 @@
   <div class="story-line-container">
     {$currentDialogueLine.statement}
   </div>
-  {#if $currentDialogueLine.PeP } <!-- sometimes we have a story line and no action at all-->
+  {#if $currentDialogueLine.CeC } <!-- sometimes we have a story line and no action at all-->
     <div class="dialogue-container">
       {#key key}
         <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>
