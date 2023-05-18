@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fly, fade } from 'svelte/transition';
   import {
-    currentDialogueLine,
+    currentStatement,
     currentEvent,
     playStory,
     stopStory,
@@ -26,9 +26,9 @@
 
 <div class="card">
   <div class="story-line-container">
-    {$currentDialogueLine.statement}
+    {$currentStatement.statement}
   </div>
-  {#if $currentDialogueLine.CeC } <!-- sometimes we have a story line and no action at all-->
+  {#if $currentStatement.CeC } <!-- sometimes we have a story line and no action at all-->
     <div class="dialogue-container">
       {#key key}
         <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>

@@ -5,11 +5,33 @@ import type { TCharactersEventCharacters, TRelationship, TStatementCeC } from '.
 import type { TStoryState } from '../types';
 
 /**
- * statements is the statement array of the current story
+ * Datastore for everything story related. Important structures:
+ * statements: Array of the story being told, broken down into statements that
+ *             have attached characters and events
+ *
+ * TNamesToRelationship: A map that looksup a character's name and tells you their
+ *                       relationship to the king.
+ * 
+ * statementIndex: A store (subscribable value) tracking which statement we are on right now
+ *                 Used internally to populate currentDialogLine
+ *
+ * eventIndex: Within the current statement, which event (the emojis and portraits) is being shown?
+ *             This is used internally to populate currentEvent
+ *
+ * currentStatement: What statement are we currently working with? (Animating characters in, showing narration for, etc)
+ *
+ * currentEvent: The event currently being shown.
+ * 
+ * storyState: Used to track if the the story is still loading, playing, or if we are finished playing it. 
+ * 
+ * The entire story is ran off of 2 timers, one to progress statements, and a second sub timer to progress
+ * events within a statement. Pausing the story means killing both these timers. The statement timer is
+ * calculated based on average reading speed of an adult, formula courtesy of GPT.
  */
+
 export let statements: Array<TStatementCeC> = [];
 
-// TODO: Do this properly
+// TODO: Do this properly, a dictionary or something.
 type TNamesToRelationship = {
   [key: string]: TRelationship;
 };
@@ -17,7 +39,7 @@ export let relationshipMap: TNamesToRelationship = {};
 
 let statementIndex: Writable<number> = writable(0); // What statement in the array we are currently on;
 let eventIndex: Writable<number> = writable(0); // What statement in the array we are currently on;
-export const currentDialogueLine = derived(
+export const currentStatement = derived(
   statementIndex,
   $statementIndex => statements[$statementIndex]
 );
