@@ -48,7 +48,7 @@ After the animation is over, shows the entire story in summary. Includes a butto
 
 Trivial UI component to render portraits and names.
 
-### StoryFetcherws.ts
+### `StoryFetcherws.ts`
 
 Establishes a websocket connection to the server and fetches a story, updating the `storyState` story as appropriate.
 
