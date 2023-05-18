@@ -44,7 +44,7 @@ and that div's contents will get updated when the current statement changes, no 
 
 After the animation is over, shows the entire story in summary. Includes a button to start everything over again by simply refreshing the page.
 
-### `PeopleCard.svelte`
+### `CharacterCard.svelte`
 
 Trivial UI component to render portraits and names.
 

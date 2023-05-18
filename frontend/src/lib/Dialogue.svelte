@@ -9,7 +9,7 @@
     nextStatement,
     resetStory
   } from '../stores/story.svelte';
-  import PeopleCard from './PeopleCard.svelte';
+  import CharacterCard from './CharacterCard.svelte';
 
   let key;
 
@@ -32,12 +32,12 @@
     <div class="dialogue-container">
       {#key key}
         <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>
-          <PeopleCard people={$currentEvent.left} flyInFrom={'left'}/>
+          <CharacterCard characters={$currentEvent.left} flyInFrom={'left'}/>
           <div in:fade={{ delay: 600 }} class="speech-bubble">
             {$currentEvent.eventEmoji}
           </div>
           {#if $currentEvent.right}
-            <PeopleCard people={$currentEvent.right} flyInFrom={'right'}/>
+            <CharacterCard characters={$currentEvent.right} flyInFrom={'right'}/>
           {/if}
         </div>
       {/key}

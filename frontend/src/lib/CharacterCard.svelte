@@ -2,8 +2,6 @@
   import { relationshipMap } from '../stores/story.svelte';
   import { fly } from 'svelte/transition';
   import type { TRelationship } from '../../../shared/dist';
-  export let people: string[];
-  export let flyInFrom: 'left' | 'right';
   import kingUrl from '../assets/king.jpg';
   import advisorUrl from '../assets/advisor.jpg';
   import queenUrl from '../assets/queen.jpg'
@@ -13,6 +11,10 @@
   import olderPrinceUrl from '../assets/older_prince.jpg';
   import bishopUrl from '../assets/bishop.jpg';
   import generalUrl from '../assets/general.jpg';
+
+  // This is how Svelte does props!
+  export let characters: string[];
+  export let flyInFrom: 'left' | 'right';
 
   // Maps a relationship to the accompanying portrait URL, this will change soon as we will select from a random set
   // of portraits in a future version.
@@ -36,9 +38,9 @@
 </script>
 
 <div class="character" in:fly={{ x:flyInXVal, delay: 300, duration: 500 }}>
-  {#each people as person}
+  {#each characters as person}
   {#if relationshipMap[person.trim()] && relationshipToUrl(relationshipMap[person.trim()]) !== 'none'}
-    <img class={people.length === 2 ? "character-portrait-2-up" : "character-portrait"} src={relationshipToUrl(relationshipMap[person.trim()])} alt="portrait of {person}" />
+    <img class={characters.length === 2 ? "character-portrait-2-up" : "character-portrait"} src={relationshipToUrl(relationshipMap[person.trim()])} alt="portrait of {person}" />
   {/if}
   <div>{person.trim()}</div>
   {/each}
@@ -47,6 +49,7 @@
 <style>
   .character {
     width: 100px;
+    min-height: 130px;
     border-radius: 4px;
     /* border: 1px solid rgba(0, 0, 0, 0.2); */
     box-shadow: -1px -1px 1px #ffd875;
