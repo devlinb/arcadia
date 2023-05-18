@@ -58,15 +58,12 @@
   <border>
     <content>
       {#if $storyState === 'USER_INPUT'}
-      
-        <div class="card">
-          <Characters onsubmit={handleCharacterSubmit} />
-        </div>
-        {:else if $storyState === 'LOADING'}
+        <Characters onsubmit={handleCharacterSubmit} />
+      {:else if $storyState === 'LOADING'}
         <div>The bards are writing your tale</div>
-        {:else if $storyState === 'READY'}
+      {:else if $storyState === 'READY'}
         <Dialogue/>
-        {:else if $storyState === 'FINISHED'}
+      {:else if $storyState === 'FINISHED'}
         <StorySummary/>
       {/if}
     </content>

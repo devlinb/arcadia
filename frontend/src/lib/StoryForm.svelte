@@ -76,7 +76,7 @@
 </script>
 
 <svelte:window/>
-
+  <div class='card'>
   <devcontrols>
     <input type="checkbox" bind:checked={$usePregeneratedCharacters} id="pregenCharactersCheckbox" on:click={handleOnPregenClicked} />
     <label for="pregenCharactersCheckbox">Pregenerated characters?</label>
@@ -107,3 +107,4 @@
       {/if}
     </button>
   </form>
+  </div>
