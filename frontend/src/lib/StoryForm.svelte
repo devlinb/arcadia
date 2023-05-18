@@ -1,6 +1,12 @@
 <script lang="ts">
   import type { TRelationship, TPerson, TStorySubmission } from '../../../shared/dist';
   import { usePregeneratedCharacters, usePregeneratedStory, relationshipMap } from '../stores/story.svelte';
+
+  /**
+   * This file collects the kingdom name and the name of all the characters. All characters have a name and a relationship 
+   * to the ruler, the ruler is the first character in list and is always a king or a queen.
+   */
+
   export let onsubmit: (people: TStorySubmission) => void;
   const relationships: Array<TRelationship> = ['King', 'Older Daughter', 'Younger Daughter', 'Older Son', 'Younger Son', 'General', 'Queen', 'Bishop', 'Advisor', "King's Brother", "Queen's Brother", "King's Newphew"];
   const defaults: Array<TPerson> = [
@@ -14,19 +20,6 @@
   let unusedRelationships: Set<TRelationship> = new Set(relationships);
   unusedRelationships.delete('King');
   let people: Array<TPerson> = [{ id: 0, name: '', relationship: 'King' }];
-
-  let screenSize;
-
-  type TStates = 'intro' | 'kingdom' | 'ruler' | 'relatives';
-  type TStateMachine = {
-    step: TStates;
-    relativeCount: number;
-  };
-
-  const stateMachine: TStateMachine = {
-    step: 'intro',
-    relativeCount: 0,
-  };
 
   let usePregen: boolean = false;
 
@@ -73,29 +66,6 @@
     people = people;
   };
 
-  const handleNextState = () => {
-    switch (stateMachine.step) {
-      case 'intro':
-        stateMachine.step = 'kingdom';
-        break;
-      case 'kingdom':
-        stateMachine.step = 'ruler';
-        break;
-      case 'ruler':
-        stateMachine.step = 'relatives';
-        stateMachine.relativeCount = 1;
-        unusedRelationships.delete(people[0].relationship);
-        handleOnAdd();
-        break;
-      case 'relatives':
-        stateMachine.relativeCount++;
-        handleOnAdd();
-        break;
-      default:
-        break;
-    }
-  };
-
   handleOnAdd();
   handleOnAdd();
   handleOnAdd();
@@ -103,9 +73,8 @@
   handleOnAdd();
 </script>
 
-<svelte:window bind:innerWidth={screenSize} />
+<svelte:window/>
 
-  <!-- Desktop/Tablet -->
   <devcontrols>
     <input type="checkbox" bind:checked={$usePregeneratedCharacters} id="pregenCharactersCheckbox" on:click={handleOnPregenClicked} />
     <label for="pregenCharactersCheckbox">Pregenerated characters?</label>

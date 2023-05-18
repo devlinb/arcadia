@@ -23,8 +23,18 @@ wss.on('connection', async (ws, req) => {
   const parsedUrl = parseUrl(req.url || '', true);
   console.log(`parsedUrl: ${JSON.stringify(parsedUrl)}`);
 
-  const kingdom = parsedUrl.query.kingdom as string;
+  // Never trust user input! Truncating the Kingdom name to 20 and character
+  // names to 12.
+  const kingdomFull = parsedUrl.query.kingdom as string;
+  const kingdom =
+    kingdomFull.length > 20 ? kingdomFull.substring(0, 20) : kingdomFull;
   const people: Array<TPerson> = JSON.parse(parsedUrl.query.people as string);
+  // Truncade the st
+  people.forEach(
+    (person, i) =>
+      (people[i].name =
+        person.name.length > 12 ? person.name.substring(0, 12) : person.name)
+  );
 
   const submission: TStorySubmission = {
     kingdom,

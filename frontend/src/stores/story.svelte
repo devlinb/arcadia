@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-import { writable, readonly, derived, type Readable, get } from 'svelte/store';
+import { writable, derived, type Readable, get } from 'svelte/store';
 import type { Writable } from 'svelte/store';
 import type { TPeopleEventPeople, TRelationship, TStatementPeP } from '../../../shared';
 import type { TStoryState } from '../types';

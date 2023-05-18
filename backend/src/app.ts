@@ -15,7 +15,7 @@ import healthcheck from './routes/healthcheck';
 const app: express.Express = express();
 
 const corsOptions = {
-  origin: '*', // You can set a specific origin if needed
+  origin: '*', // TODO: Move this over to an env file
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
 };

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { fly, fade } from 'svelte/transition';
   import {
     currentDialogueLine,
@@ -8,41 +7,14 @@
     stopStory,
     previousStatement,
     nextStatement,
-    resetStory,
-    relationshipMap } from '../stores/story.svelte';
-  import type { TRelationship } from '../../../shared/dist';
+    resetStory
+  } from '../stores/story.svelte';
   import PeopleCard from './PeopleCard.svelte';
 
-  
-  import kingUrl from '../assets/king.jpg';
-  import advisorUrl from '../assets/advisor.jpg';
-  import queenUrl from '../assets/queen.jpg'
-  import youngPrincessUrl from '../assets/young_princess.jpg';
-  import youngPrinceUrl from '../assets/young_prince.jpg';
-  import olderPrincessUrl from '../assets/older_princess.jpg';
-  import olderPrinceUrl from '../assets/older_prince.jpg';
-  import bishopUrl from '../assets/bishop.jpg';
-  import generalUrl from '../assets/general.jpg';
   let key;
-  
-  const relationshipToUrl = (relationship: TRelationship): string => {
-    switch (relationship) {
-      case "King": return kingUrl;
-      case "Queen": return queenUrl;
-      case "Older Daughter": return olderPrincessUrl;
-      case "Younger Daughter": return youngPrincessUrl;
-      case "Older Son": return olderPrinceUrl;
-      case "Younger Son": return youngPrinceUrl;
-      case "General": return generalUrl;
-      case "Bishop": return bishopUrl;
-      case "Advisor": return advisorUrl;
-      default:
-        return "none";
-    }
-  }
 
   // Whenever any either of the characters or if the eventEmoji changes, the key will change
-  // which will cause all the divs to redraw which then triggers new animations
+  // which will cause all the divs to redraw, which will then trigger new slide in and out animations.
   $: {
     if ($currentEvent){
       key = $currentEvent.left[0] + $currentEvent.eventEmoji + ($currentEvent.right && $currentEvent.right[0]);

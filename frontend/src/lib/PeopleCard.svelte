@@ -1,6 +1,6 @@
 <script lang="ts">
   import { relationshipMap } from '../stores/story.svelte';
-  import { fly, fade } from 'svelte/transition';
+  import { fly } from 'svelte/transition';
   import type { TRelationship } from '../../../shared/dist';
   export let people: string[];
   export let flyInFrom: 'left' | 'right';
@@ -14,6 +14,8 @@
   import bishopUrl from '../assets/bishop.jpg';
   import generalUrl from '../assets/general.jpg';
 
+  // Maps a relationship to the accompanying portrait URL, this will change soon as we will select from a random set
+  // of portraits in a future version.
   const relationshipToUrl = (relationship: TRelationship): string => {
     switch (relationship) {
       case "King": return kingUrl;
