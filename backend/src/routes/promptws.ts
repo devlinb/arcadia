@@ -65,7 +65,7 @@ wss.on('connection', async (ws, req) => {
         { role: 'user', content: charactersStr },
       ],
       temperature: 0.8,
-      top_p: 1,
+      top_p: 0.7,
       presence_penalty: 0.5,
       frequency_penalty: 0,
     });
