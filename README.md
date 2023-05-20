@@ -69,8 +69,8 @@ To run the project, do the following:
 Upcoming features:
 
 1. Text to speech narration
-2. Streaming responses from ChatGPT to reduce response time from 30 seconds down to ~5 seconds
-  b. Adding in TTS will probably make this go back up to 30 seconds! But we need this so the result isn't 30s+30s=1 minute wait in total.
+2. ~~Streaming responses from ChatGPT to reduce response time from 30 seconds down to 5 seconds~~
+  - Adding in TTS will probably make this go back up to 30 seconds! But we need this so the result isn't 30s+30s=1 minute wait in total.
 3. Music
 4. Sound effects triggers off of emojis
 5. The ability to save, replay, and share stories.
