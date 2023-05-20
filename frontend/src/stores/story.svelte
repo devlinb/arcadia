@@ -39,6 +39,7 @@ export let relationshipMap: TNamesToRelationship = {};
 
 let statementIndex: Writable<number> = writable(0); // What statement in the array we are currently on;
 let eventIndex: Writable<number> = writable(0); // What statement in the array we are currently on;
+export let completeStoryReceived = writable(false); // Only used for streaming stories.
 export const currentStatement = derived(
   statementIndex,
   $statementIndex => statements[$statementIndex]
@@ -66,24 +67,31 @@ let storyProgressTimer: ReturnType<typeof setTimeout>;
  */
 export const setStory = (storyStatements: Array<TStatementCeC>) => {
   statements = storyStatements;
+  completeStoryReceived.set(true);
   statementIndex.set(0);
   eventIndex.set(0);
+}
+
+export const addToStory = (storyStatement: TStatementCeC) => {
+  statements.push(storyStatement);
 }
 
 
 export const playStory = () => {
   console.log('playing story');
   if (statements.length <= 0) throw "No story assigned to tell";
-  if (statements.length - 1 <= get(statementIndex)) {
-    setTimeout(() => {
-        storyState.set('FINISHED');
-      },
-      readingTimeInMilliseconds(statements[get(statementIndex)].statement)
-    );
-    return;
-  }
 
-  storyProgressTimer = setTimeout(() => {
+  storyProgressTimer = setTimeout(async () => {
+    if (statements.length - 1 <= get(statementIndex)) {
+      if (get(completeStoryReceived)) {
+        storyState.set('FINISHED');
+        return;
+      } else {
+        // Very rarely we narrate faster than stories come in, 2 extra seconds is enough time for the next chunk to exist.
+        await new Promise(r => setTimeout(r, 2000));
+      }
+    }
+
     const stIndex = get(statementIndex);
     const evIndex = get(eventIndex);
     if (statements[stIndex].CeC && statements[stIndex].CeC.length - 1 > evIndex) {
@@ -94,10 +102,6 @@ export const playStory = () => {
     }    
     playStory();
   },
-  /*
-    If we have multiple events, divide estimated reading time of the paragraph by the number of events we need 
-    are going to show. If only a single event, just use the estimated reading time for the paragraph.
-  */
   statements[get(statementIndex)].CeC
   ? readingTimeInMilliseconds(statements[get(statementIndex)].statement) / statements[get(statementIndex)].CeC.length
   : readingTimeInMilliseconds(statements[get(statementIndex)].statement)
