@@ -1,7 +1,7 @@
 import type { TStorySubmission } from "../../../shared";
 import { get } from 'svelte/store'
 
-import { setStory, storyState, usePregeneratedStory } from '../stores/story.svelte';
+import { setStory, addToStory, storyState, usePregeneratedStory, completeStoryReceived } from '../stores/story.svelte';
 import { parseOutEvents, statementEventsToStatementCecs } from "../../../shared/storyparser";
 
 /**
@@ -12,11 +12,10 @@ import { parseOutEvents, statementEventsToStatementCecs } from "../../../shared/
  * @param submission 
  * @returns 
  */
-export const fetchStory = async (submission: TStorySubmission): Promise<void> => {
-  const url = new URL(`${import.meta.env.VITE_API_SERVER_WS}${import.meta.env.VITE_PROMPT_URL_WS}`);
+export const startStreamingStory = async (submission: TStorySubmission): Promise<void> => {
+  const url = new URL(`${import.meta.env.VITE_API_SERVER_WS}${import.meta.env.VITE_PROMPT_URL_STREAMING_WS}`);
   url.searchParams.append('kingdom', submission.kingdom);
   url.searchParams.append('characters', JSON.stringify(submission.characters));
-  console.log(`url: ${url}`);
   
   if (get(usePregeneratedStory)) {
     const events = parseOutEvents(pregenStories[2].story);
@@ -39,7 +38,6 @@ export const fetchStory = async (submission: TStorySubmission): Promise<void> =>
     ws.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);
       const { type, payload } = data;
-
       switch (type) {
         case 'generating_story':
           inProgress = true;
@@ -47,14 +45,15 @@ export const fetchStory = async (submission: TStorySubmission): Promise<void> =>
           console.log('Story generation in progress');
           break;
 
-        // The entire story all at once.
-        case 'story':
+        case 'story_line':
           inProgress = false;
           storyState.set('READY');
-          console.log('Story received:', payload.story);
-          setStory(payload);
-          resolve();
+          addToStory(payload);
+          resolve(); // first time outer function is awaited on this will do something.
+          break;
 
+        case 'end':
+          completeStoryReceived.set(true);
           break;
 
         case 'error':

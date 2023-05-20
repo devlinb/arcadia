@@ -1,2 +1,2 @@
 export * from './types';
-export { parseOutEvents, statementEventsToStatementPeps } from './storyparser';
+export { parseOutEvents, statementEventsToStatementCecs } from './storyparser';

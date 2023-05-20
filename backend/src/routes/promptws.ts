@@ -2,12 +2,8 @@ import { IncomingMessage } from 'http';
 import { Configuration, OpenAIApi } from 'openai';
 import { parse as parseUrl } from 'url';
 import { Server as WebSocketServer } from 'ws';
-import {
-  TCharacter,
-  TStorySubmission,
-  parseOutEvents,
-  statementEventsToStatementPeps,
-} from '../shared/';
+import { parseOutEvents, statementEventsToStatementCecs } from '../shared/';
+import { sanitizeQueryString } from '../utils/sanitizeQueryString';
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -18,45 +14,22 @@ const openai = new OpenAIApi(configuration);
 const wss = new WebSocketServer({ noServer: true });
 
 wss.on('connection', async (ws, req) => {
-  console.log('making a story');
-
-  const parsedUrl = parseUrl(req.url || '', true);
-  console.log(`parsedUrl: ${JSON.stringify(parsedUrl)}`);
-
-  // Never trust user input! Truncating the Kingdom name to 20 and character
-  // names to 12.
-  const kingdomFull = parsedUrl.query.kingdom as string;
-  const kingdom =
-    kingdomFull.length > 20 ? kingdomFull.substring(0, 20) : kingdomFull;
-  const characters: Array<TCharacter> = JSON.parse(
-    parsedUrl.query.characters as string
-  );
-  // Truncade the st
-  characters.forEach(
-    (character, i) =>
-      (characters[i].name =
-        character.name.length > 12
-          ? character.name.substring(0, 12)
-          : character.name)
-  );
-
-  const submission: TStorySubmission = {
-    kingdom,
-    characters,
-  };
-
-  let charactersStr = '';
-
-  for (const p of submission.characters) {
-    charactersStr += `${p.name} - ${p.relationship}\n`;
-  }
-
-  charactersStr += `\nKingdom - ${submission.kingdom}`;
-
-  // Send "generating_story" message
-  ws.send(JSON.stringify({ type: 'generating_story' }));
-
   try {
+    console.log('making a story');
+
+    const parsedUrl = parseUrl(req.url || '', true);
+    const submission = sanitizeQueryString(parsedUrl);
+
+    let charactersStr = '';
+
+    for (const p of submission.characters) {
+      charactersStr += `${p.name} - ${p.relationship}\n`;
+    }
+
+    charactersStr += `\nKingdom - ${submission.kingdom}`;
+
+    // Send "generating_story" message
+    ws.send(JSON.stringify({ type: 'generating_story' }));
     const completion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
@@ -75,8 +48,8 @@ wss.on('connection', async (ws, req) => {
 
     // Send the story result
     const events = parseOutEvents(result as string);
-    const statementPePs = statementEventsToStatementPeps(events);
-    ws.send(JSON.stringify({ type: 'story_line', payload: statementPePs }));
+    const statementPePs = statementEventsToStatementCecs(events);
+    ws.send(JSON.stringify({ type: 'story', payload: statementPePs }));
   } catch (e) {
     console.log(`got error: ${e}`);
 
@@ -90,6 +63,11 @@ wss.on('connection', async (ws, req) => {
   }
 });
 
+/**
+ * Basically this updates the connection to a full websocket connection and
+ * emits the `connection` event to the server, which then causes the
+ * .on('connection) handler to be called.
+ */
 export default function getPromptws(
   req: IncomingMessage,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

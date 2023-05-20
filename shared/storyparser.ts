@@ -34,7 +34,7 @@ export const parseOutEvents = (text: string): Array<TStatementEvent> => {
   return statements;
 };
 
-export const statementEventsToStatementPeps = (
+export const statementEventsToStatementCecs = (
   events: Array<TStatementEvent>
 ): Array<TStatementCeC> => {
   const result: TStatementCeC[] = [];

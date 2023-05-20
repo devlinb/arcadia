@@ -1,6 +1,6 @@
 <script lang="ts">
   import Characters from './lib/StoryForm.svelte';
-  import { fetchStory } from './lib/StoryFetcherws';
+  import { startStreamingStory } from './lib/StoryFetcherStreamingws';
   import { playStory, storyState } from './stores/story.svelte';
   import type { TStorySubmission } from '../../shared';
   import townSnowUrl from '../src/assets/town_square_snow.jpg';
@@ -46,7 +46,8 @@
   import Dialogue from './lib/Dialogue.svelte';
 
   const handleCharacterSubmit = async (submission: TStorySubmission) => {
-    await fetchStory(submission);
+    await startStreamingStory(submission);
+    console.log(`calling playstory`);
     playStory();
 
     // @ts-ignore

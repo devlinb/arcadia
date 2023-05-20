@@ -9,7 +9,7 @@ const envLoadResult = dotenv.config();
 console.log(`Environment: ${JSON.stringify(envLoadResult)}`);
 
 import getPromptws from './routes/promptws';
-import getPrompt from './routes/prompt';
+import getPromptStreamingWs from './routes/promptstreamingws';
 import healthcheck from './routes/healthcheck';
 
 const app: express.Express = express();
@@ -25,7 +25,6 @@ app.use(express.json());
 const router: Router = Router();
 
 router.get('/healthcheck', healthcheck);
-router.get('/prompt', getPrompt);
 app.use(router);
 
 const server = http.createServer(app);
@@ -35,6 +34,8 @@ server.on('upgrade', (req, socket, head) => {
   console.log('got an upgrade request' + req.url);
   if (req.url?.startsWith('/promptws')) {
     getPromptws(req, socket, head);
+  } else if (req.url?.startsWith('/promptstreamingws')) {
+    getPromptStreamingWs(req, socket, head);
   } else {
     console.log('wrong url destroying');
     socket.destroy();
