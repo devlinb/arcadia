@@ -94,7 +94,6 @@ const handleInitialConnection = async (
       options,
       processWord,
       () => {
-        console.log(`!!!!!!!!!!!!finished with story`);
         ws.send(JSON.stringify({ type: 'end' }));
         ws.close();
       },
