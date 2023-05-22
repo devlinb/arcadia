@@ -10,6 +10,7 @@
     resetStory
   } from '../../stores/story.svelte';
   import CharacterCard from './CharacterCard.svelte';
+  import SfxPlayer from './SfxPlayer.svelte';
 
   let key;
 
@@ -23,7 +24,7 @@
     }
   }
 </script>
-
+<SfxPlayer/>
 <div class="card">
   <div class="story-line-container">
     {$currentStatement.statement}

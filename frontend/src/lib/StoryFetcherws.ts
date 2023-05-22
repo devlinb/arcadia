@@ -1,7 +1,8 @@
 import type { TStorySubmission } from "../../../shared";
 import { get } from 'svelte/store'
 
-import { setStory, storyState, usePregeneratedStory } from '../stores/story.svelte';
+import { setStory, storyState } from '../stores/story.svelte';
+import { usePregeneratedStory } from '../stores/settings.svelte'
 import { parseOutEvents, statementEventsToStatementCecs } from "../../../shared/storyparser";
 
 /**
@@ -19,7 +20,7 @@ export const fetchStory = async (submission: TStorySubmission): Promise<void> =>
   console.log(`url: ${url}`);
   
   if (get(usePregeneratedStory)) {
-    const events = parseOutEvents(pregenStories[2].story);
+    const events = parseOutEvents(pregenStories[0].story);
     const statementPePs = statementEventsToStatementCecs(events);
     setStory(statementPePs);
     storyState.set('READY');

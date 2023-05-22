@@ -11,6 +11,9 @@
   import olderPrinceUrl from '../../assets/older_prince.jpg';
   import bishopUrl from '../../assets/bishop.jpg';
   import generalUrl from '../../assets/general.jpg';
+  import kingsBrotherUrl from '../../assets/kings_brother.jpg';
+  import kingsNephew from '../../assets/kings_nephew.jpg';
+  import queensBrother from '../../assets/queens_brother.jpg';
 
   // This is how Svelte does props!
   export let characters: string[];
@@ -29,6 +32,9 @@
       case "General": return generalUrl;
       case "Bishop": return bishopUrl;
       case "Advisor": return advisorUrl;
+      case "King's Brother": return kingsBrotherUrl;
+      case "King's Newphew": return kingsNephew;
+      case "Queen's Brother": return queensBrother;
       default:
         return "none";
     }

@@ -8,6 +8,7 @@
   import townDayUrl from '../src/assets/town_square_day.jpg';
   import townDuskUrl from '../src/assets/town_square_dusk.jpg';
   import StorySummary from './lib/components/StorySummary.svelte';
+  import Music from './lib/components/Music.svelte';
 
   import 'https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js';
   // @ts-ignore
@@ -55,7 +56,7 @@
   };
 </script>
 
-
+<Music/>
 <main>
   <border>
     <content>

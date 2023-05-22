@@ -19,6 +19,7 @@
     "vite": "^4.2.0"
   },
   "dependencies": {
+    "aimless.js": "^1.0.1",
     "svelte-simple-modal": "^1.5.2"
   }
 }

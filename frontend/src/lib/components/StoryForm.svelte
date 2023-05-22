@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { TRelationship, TCharacter, TStorySubmission } from '../../../../shared/dist';
-  import { usePregeneratedCharacters, usePregeneratedStory, relationshipMap } from '../../stores/story.svelte';
+  import { relationshipMap } from '../../stores/story.svelte';
+  import { usePregeneratedCharacters, usePregeneratedStory, enableMusicAndSfx } from '../../stores/settings.svelte';
   import Credits from './Credits.svelte';
   import { getContext } from 'svelte';
   import type { Open, Close } from 'svelte-simple-modal';
@@ -95,6 +96,8 @@
     <label for="pregenCharactersCheckbox">Pregenerated characters?</label>
     <input type="checkbox" disabled={!$usePregeneratedCharacters} bind:checked={$usePregeneratedStory} id="pregenStoryCheckbox" />
     <label for="pregenStoryCheckbox">Pregenerated story?</label>
+    <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox"/>
+    <label for="enableMusicAndSfxCheckbox">Enable sound and music</label>
   </devcontrols>
   <form class="storyForm" on:submit|preventDefault={handleOnSubmit}>
     <div>Name the members in the royal house of <input type ="text" style="max-width: 100px" maxlength="20" bind:value={kingdom}/></div>

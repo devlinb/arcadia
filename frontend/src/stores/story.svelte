@@ -55,8 +55,6 @@ export const currentEvent: Readable<TCharactersEventCharacters> = derived(
 
 export const storyState: Writable<TStoryState> = writable('USER_INPUT');
 
-export const usePregeneratedCharacters: Writable<boolean> = writable(false);
-export const usePregeneratedStory: Writable<boolean> = writable(false);
 
 let storyProgressTimer: ReturnType<typeof setTimeout>;
 
@@ -78,28 +76,35 @@ export const addToStory = (storyStatement: TStatementCeC) => {
 
 
 export const playStory = () => {
-  console.log('playing story');
   if (statements.length <= 0) throw "No story assigned to tell";
-
   storyProgressTimer = setTimeout(async () => {
-    if (statements.length - 1 <= get(statementIndex)) {
-      if (get(completeStoryReceived)) {
-        storyState.set('FINISHED');
-        return;
-      } else {
-        // Very rarely we narrate faster than stories come in, 2 extra seconds is enough time for the next chunk to exist.
+    const stIndex = get(statementIndex);
+    const evIndex = get(eventIndex);
+
+    // Start off with special cases for the last statement.
+    if (statements.length - 1 === get(statementIndex)) {
+      if (!get(completeStoryReceived)) {
+        // On rare occasions we can race ahead of the story, wait a couple seconds for 
+        // chatGPT to catch up. This is *not* a robust way of doing this, needs rewriting.
         await new Promise(r => setTimeout(r, 2000));
+      } else {
+        // Multiple events on the last statement
+        if (statements[stIndex].CeC && statements[stIndex].CeC.length - 1 > evIndex) {
+          eventIndex.set(evIndex + 1);
+        } else {
+          setTimeout(() => { storyState.set('FINISHED') },
+          readingTimeInMilliseconds(statements[get(statementIndex)].statement));
+          return;
+        }
       }
     }
 
-    const stIndex = get(statementIndex);
-    const evIndex = get(eventIndex);
     if (statements[stIndex].CeC && statements[stIndex].CeC.length - 1 > evIndex) {
       eventIndex.set(evIndex + 1);
     } else {
       eventIndex.set(0);
       statementIndex.set(stIndex + 1);
-    }    
+    }
     playStory();
   },
   statements[get(statementIndex)].CeC
