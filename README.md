@@ -37,7 +37,7 @@ The code is split into three folder:
 The `shared` folder is symlinked into the `backend` and `frontend` folders, a nifty trick that allows for sharing TypeScript types and modules between projects without having to setup a full mono-repo. If you are using an old version of Windows (pre Windows 10), then you may have to manually enable symlinks for non-administrator accounts on your system.
 
 ### Backend
-The backend demonstrates how to prompt GPT so it gives structured responses, and then parsing those responses. Express.js is used to fetch data from ChatGPT and send the results over web sockets to a client. (The next release of Arcadia will support streaming responses from ChatGPT)
+The backend is a minimal Express.js server that demonstrates how to prompt GPT so it gives structured responses, and then parsing those responses. Two examples of fetching from GPT are included, one hitting the REST endpoint for chat, and a second showing streaming responses for chat. In both cases results over sent from the server over a web socket to the front end web client.
 
 To get the backend working you will need to create your own `.env` file with your `OPENAI_API_KEY` key in it.
 

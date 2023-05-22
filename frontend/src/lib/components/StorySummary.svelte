@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { statements } from '../stores/story.svelte';
+  import { statements } from '../../stores/story.svelte';
 </script>
 
 <entirestory>

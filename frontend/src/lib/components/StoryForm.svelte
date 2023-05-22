@@ -1,6 +1,12 @@
 <script lang="ts">
-  import type { TRelationship, TCharacter, TStorySubmission } from '../../../shared/dist';
-  import { usePregeneratedCharacters, usePregeneratedStory, relationshipMap } from '../stores/story.svelte';
+  import type { TRelationship, TCharacter, TStorySubmission } from '../../../../shared/dist';
+  import { usePregeneratedCharacters, usePregeneratedStory, relationshipMap } from '../../stores/story.svelte';
+  import Credits from './Credits.svelte';
+  import { getContext } from 'svelte';
+  import type { Open, Close } from 'svelte-simple-modal';
+  import githubLogoUrl from '../../assets/github-mark.png';
+  const { open, close } = getContext('simple-modal') as { open: Open, close: Close };
+  const showCredits= () => open(Credits);
 
   /**
    * This file collects the kingdom name and the name of all the characters. All characters have a name and a relationship 
@@ -74,9 +80,16 @@
   handleOnAdd();
   handleOnAdd();
 </script>
-
-<svelte:window/>
   <div class='card'>
+  <div class='credits-group'>
+    <a href="https://github.com/devlinb/arcadia/">
+      <img
+        alt="Github logo indicating link to source code"
+        src={githubLogoUrl} 
+        width="16px" height="16px" />
+    </a>
+    <a href='#top' on:click={showCredits}>Credits</a>
+  </div>
   <devcontrols>
     <input type="checkbox" bind:checked={$usePregeneratedCharacters} id="pregenCharactersCheckbox" on:click={handleOnPregenClicked} />
     <label for="pregenCharactersCheckbox">Pregenerated characters?</label>
@@ -108,3 +121,11 @@
     </button>
   </form>
   </div>
+
+  <style>
+    .credits-group {
+      margin-top: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>

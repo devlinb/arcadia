@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { relationshipMap } from '../stores/story.svelte';
+  import { relationshipMap } from '../../stores/story.svelte';
   import { fly } from 'svelte/transition';
-  import type { TRelationship } from '../../../shared/dist';
-  import kingUrl from '../assets/king.jpg';
-  import advisorUrl from '../assets/advisor.jpg';
-  import queenUrl from '../assets/queen.jpg'
-  import youngPrincessUrl from '../assets/young_princess.jpg';
-  import youngPrinceUrl from '../assets/young_prince.jpg';
-  import olderPrincessUrl from '../assets/older_princess.jpg';
-  import olderPrinceUrl from '../assets/older_prince.jpg';
-  import bishopUrl from '../assets/bishop.jpg';
-  import generalUrl from '../assets/general.jpg';
+  import type { TRelationship } from '../../../../shared/dist';
+  import kingUrl from '../../assets/king.jpg';
+  import advisorUrl from '../../assets/advisor.jpg';
+  import queenUrl from '../../assets/queen.jpg'
+  import youngPrincessUrl from '../../assets/young_princess.jpg';
+  import youngPrinceUrl from '../../assets/young_prince.jpg';
+  import olderPrincessUrl from '../../assets/older_princess.jpg';
+  import olderPrinceUrl from '../../assets/older_prince.jpg';
+  import bishopUrl from '../../assets/bishop.jpg';
+  import generalUrl from '../../assets/general.jpg';
 
   // This is how Svelte does props!
   export let characters: string[];

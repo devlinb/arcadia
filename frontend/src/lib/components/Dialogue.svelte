@@ -8,7 +8,7 @@
     previousStatement,
     nextStatement,
     resetStory
-  } from '../stores/story.svelte';
+  } from '../../stores/story.svelte';
   import CharacterCard from './CharacterCard.svelte';
 
   let key;
