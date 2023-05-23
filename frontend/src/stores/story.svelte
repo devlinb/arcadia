@@ -24,9 +24,6 @@
    *
    * storyState: Used to track if the the story is still loading, playing, or if we are finished playing it.
    *
-   * The entire story is ran off of 2 timers, one to progress statements, and a second sub timer to progress
-   * events within a statement. Pausing the story means killing both these timers. The statement timer is
-   * calculated based on average reading speed of an adult, formula courtesy of GPT.
    */
 
   export let statements: Array<TStatementCeC> = [];
@@ -49,6 +46,7 @@
 
   export const storyState: Writable<TStoryState> = writable('USER_INPUT');
 
+  // Cancellable timer used for auto advancing the story.
   let storyProgressTimer: ReturnType<typeof setTimeout>;
 
   /**
@@ -68,7 +66,6 @@
   };
 
   export const playStory = () => {
-    console.log('playing story');
     if (get(useAutoplay)) {
       storyProgressTimer = setTimeout(() => {
         nextStatement();
@@ -96,6 +93,14 @@
     playStory();
   };
 
+  /**
+   * Walks backwards through the sory.
+   * 
+   * First checks if we need to go to the previous event.
+   * If not, checks if we need to go to the previous statement
+   * If we go to the previous statement, checks if we need to go to 
+   * the end of the events array for that statement.
+   */
   export const previousStatement = () => {
     let stIndex = get(statementIndex);
     const evIndex = get(eventIndex);
@@ -114,8 +119,8 @@
       stIndex--;
       statementIndex.set(stIndex);
       if (
-      statements[stIndex].CeC &&
-      statements[stIndex].CeC.length > 0
+        statements[stIndex].CeC &&
+        statements[stIndex].CeC.length > 0
       ) {
         eventIndex.set(statements[stIndex].CeC.length - 1);
       }
@@ -128,13 +133,15 @@
   export const nextStatement = () => {
     const stIndex = get(statementIndex);
     const evIndex = get(eventIndex);
+
+    // If we are at the last statement, we may have more events or we may
+    // be ready to be finished.
     if (stIndex === statements.length - 1) { // Either next event or finished
-      if (statements[stIndex].CeC &&
-          statements[stIndex].CeC.length - 1 > evIndex) {
-          eventIndex.set(evIndex + 1);
-          return;
+      if (statements[stIndex].CeC && statements[stIndex].CeC.length - 1 > evIndex) {
+        eventIndex.set(evIndex + 1);
+        return;
       } else {
-        storyState.set('FINISHED');
+        storyState.set("FINISHED");
       }
     }
 

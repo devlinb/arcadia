@@ -53,8 +53,7 @@
 
   const handleCharacterSubmit = async (submission: TStorySubmission) => {
     await startStreamingStory(submission);
-    console.log(`calling playstory`);
-    // playStory();
+    playStory();
 
     // @ts-ignore
     viewer.loadScene('snow');
