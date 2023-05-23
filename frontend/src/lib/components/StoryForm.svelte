@@ -131,8 +131,6 @@
     <label for="pregenCharactersCheckbox">Pregen characters</label>
     <input type="checkbox" disabled={!$usePregeneratedCharacters} bind:checked={$usePregeneratedStory} id="pregenStoryCheckbox" />
     <label class={!$usePregeneratedCharacters ? 'disabled' : ''} for="pregenStoryCheckbox">Pregen story</label>
-    <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox" />
-    <label for="enableMusicAndSfxCheckbox">sound</label>
   </div>
 </div>
 
