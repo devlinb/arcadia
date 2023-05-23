@@ -1,7 +1,7 @@
 import type { TStorySubmission } from "../../../shared";
 import { get } from 'svelte/store'
 
-import { setStory, addToStory, storyState, completeStoryReceived } from '../stores/story.svelte';
+import { setStory, addToStory, playStory, storyState, completeStoryReceived } from '../stores/story.svelte';
 import { usePregeneratedStory } from '../stores/settings.svelte'
 import { parseOutEvents, statementEventsToStatementCecs } from "../../../shared/storyparser";
 
@@ -23,6 +23,7 @@ export const startStreamingStory = async (submission: TStorySubmission): Promise
     const statementPePs = statementEventsToStatementCecs(events);
     setStory(statementPePs);
     storyState.set('READY');
+    playStory();
     return;
   }
 
@@ -48,13 +49,15 @@ export const startStreamingStory = async (submission: TStorySubmission): Promise
 
         case 'story_line':
           inProgress = false;
-          storyState.set('READY');
+          if (get(storyState) !== 'STREAMING'){
+            storyState.set('STREAMING');
+          }
           addToStory(payload);
           resolve(); // first time outer function is awaited on this will do something.
           break;
 
         case 'end':
-          completeStoryReceived.set(true);
+          storyState.set('READY');
           break;
 
         case 'error':

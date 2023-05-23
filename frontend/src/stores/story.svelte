@@ -68,41 +68,20 @@
   };
 
   export const playStory = () => {
-    
     console.log('playing story');
-    if (statements.length <= 0) throw 'No story assigned to tell';
-    storyProgressTimer = setTimeout(
-      async () => {
-        const stIndex = get(statementIndex);
-        const evIndex = get(eventIndex);
-        // Start off with special cases for the last statement.
-        if (statements.length - 1 === get(statementIndex)) {
-          if (!get(completeStoryReceived)) {
-            // On rare occasions we can race ahead of the story, wait a couple seconds for 
-            // chatGPT to catch up. This is *not* a robust way of doing this, needs rewriting.
-            await new Promise(r => setTimeout(r, 2000));
-          } else {
-            // Multiple events on the last statement
-            if (statements[stIndex].CeC && statements[stIndex].CeC.length - 1 > evIndex) {
-              eventIndex.set(evIndex + 1);
-            } else {
-              setTimeout(() => { storyState.set('FINISHED') },
-              readingTimeInMilliseconds(statements[get(statementIndex)].statement));
-              return;
-            }
-          }
+    if (get(useAutoplay)) {
+      storyProgressTimer = setTimeout(() => {
+        nextStatement();
+        if (get(storyState) !== 'FINISHED') {
+          playStory();
         }
-        
-        if (statements[stIndex].CeC && statements[stIndex].CeC.length - 1 > evIndex) {
-          eventIndex.set(evIndex + 1);
-        } else {
-          eventIndex.set(0);
-          statementIndex.set(stIndex + 1);
-        }
-        if (get(useAutoplay)) playStory();
       },
-      statements[get(statementIndex)].CeC ? readingTimeInMilliseconds(statements[get(statementIndex)].statement) / statements[get(statementIndex)].CeC.length : readingTimeInMilliseconds(statements[get(statementIndex)].statement),
-    );
+      statements[get(statementIndex)].CeC
+        ? readingTimeInMilliseconds(statements[get(statementIndex)].statement) /
+          statements[get(statementIndex)].CeC.length
+        : readingTimeInMilliseconds(statements[get(statementIndex)].statement)
+      );
+    }
   };
 
   export const stopStory = () => {
@@ -118,20 +97,56 @@
   };
 
   export const previousStatement = () => {
-    if (get(statementIndex) > 0) {
-      eventIndex.set(0);
-      statementIndex.set(get(statementIndex) - 1);
+    let stIndex = get(statementIndex);
+    const evIndex = get(eventIndex);
+    if (
+      statements[stIndex].CeC &&
+      statements[stIndex].CeC.length !== 0 &&
+      evIndex !== 0
+    ) {
+      eventIndex.set(evIndex - 1);
+      stopStory();
+      playStory();
+      return;
     }
-    stopStory();
+
+    if (stIndex > 0) {
+      stIndex--;
+      statementIndex.set(stIndex);
+      if (
+      statements[stIndex].CeC &&
+      statements[stIndex].CeC.length > 0
+      ) {
+        eventIndex.set(statements[stIndex].CeC.length - 1);
+      }
+      stopStory();
+      playStory();
+      return;
+    }
   };
 
   export const nextStatement = () => {
-    if (statements.length > get(statementIndex)) {
-      eventIndex.set(0);
-      statementIndex.set(get(statementIndex) + 1);
+    const stIndex = get(statementIndex);
+    const evIndex = get(eventIndex);
+    if (stIndex === statements.length - 1) { // Either next event or finished
+      if (statements[stIndex].CeC &&
+          statements[stIndex].CeC.length - 1 > evIndex) {
+          eventIndex.set(evIndex + 1);
+          return;
+      } else {
+        storyState.set('FINISHED');
+      }
     }
-    stopStory();
-  };
+
+    if (statements[stIndex].CeC &&
+          statements[stIndex].CeC.length - 1 > evIndex) {
+          eventIndex.set(evIndex + 1);
+          return;
+      } else {
+        eventIndex.set(0);
+        statementIndex.set(stIndex + 1);
+      }
+    }
 
   const readingTimeInMilliseconds = (text: string): number => {
     // Average reading speed: 200 words per minute (WPM)
@@ -148,8 +163,7 @@
     return readingTime;
   };
 
-  export let useAutoplay: Writable<boolean> = writable(false);
-  // useAutoplay = false;
+  export let useAutoplay: Writable<boolean> = writable(true);
 
   export const handleAutoplayClicked = (e) => {
     console.log('Auto Advance = ' + e.currentTarget.checked);

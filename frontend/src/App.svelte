@@ -74,7 +74,7 @@
         <Modal><Characters onsubmit={handleCharacterSubmit} /></Modal>
       {:else if $storyState === 'LOADING'}
         <div>The bards are writing your tale</div>
-      {:else if $storyState === 'READY'}
+      {:else if $storyState === 'READY' || $storyState === 'STREAMING' || $storyState === 'AUTOPLAY_WAITING'}
         <Dialogue />
       {:else if $storyState === 'FINISHED'}
         <StorySummary />
