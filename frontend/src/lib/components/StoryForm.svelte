@@ -10,10 +10,10 @@
   const showCredits= () => open(Credits);
 
   /**
-   * This file collects the kingdom name and the name of all the characters. All characters have a name and a relationship 
+   * This file collects the kingdom name and the name of all the characters. All characters have a name and a relationship
    * to the ruler, the ruler is the first character in list and is always a king or a queen.
-   * 
-   * We use the "unusedRelationships" set to track what relationships are still available to select. 
+   *
+   * We use the "unusedRelationships" set to track what relationships are still available to select.
    */
 
   export let onsubmit: (characters: TStorySubmission) => void;
@@ -64,6 +64,18 @@
     onsubmit({ kingdom, characters });
   };
 
+  const onKeyup = (e) => {
+    console.log(e.keyCode);
+    switch (e.keyCode) {
+      case 1:
+        break;
+
+      default:
+        break;
+    }
+  };
+  window.addEventListener('keyup', onKeyup);
+
   const handleOnPregenClicked = (e) => {
     if (e.currentTarget.checked) {
       characters.length = 0;
@@ -81,7 +93,8 @@
   handleOnAdd();
   handleOnAdd();
 </script>
-  <div class='card'>
+
+<div class='card'>
   <div class='credits-group'>
     <a href="https://github.com/devlinb/arcadia/">
       <img
@@ -100,17 +113,17 @@
     <label for="enableMusicAndSfxCheckbox">Enable sound and music</label>
   </devcontrols>
   <form class="storyForm" on:submit|preventDefault={handleOnSubmit}>
-    <div>Name the members in the royal house of <input type ="text" style="max-width: 100px" maxlength="20" bind:value={kingdom}/></div>
+    <div>Name the members in the royal house of <input type="text" style="max-width: 100px" maxlength="20" bind:value={kingdom} /></div>
     {#each characters as character (character.id)}
       <nameentry>
         <input type="text" maxlength="12" bind:value={character.name} placeholder="name" disabled={usePregen} required />
         <select disabled={usePregen} value={character.relationship} on:change={(event) => handleOnSelectChange(character, event)}>
-        {#if character.id === 0}
+          {#if character.id === 0}
             <option value="King">King</option>
             <option value="Queen">Queen</option>
           {:else}
             {#each relationships as relationship}
-            <option value={relationship} hidden={!unusedRelationships.has(relationship)}>{relationship}</option>
+              <option value={relationship} hidden={!unusedRelationships.has(relationship)}>{relationship}</option>
             {/each}
           {/if}
         </select>
@@ -123,7 +136,8 @@
       {/if}
     </button>
   </form>
-  </div>
+
+</div>
 
   <style>
     .credits-group {
@@ -132,3 +146,4 @@
       justify-content: space-between;
     }
   </style>
+
