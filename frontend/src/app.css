@@ -5,8 +5,8 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color-scheme: light;
+  color: rgba(0, 0, 0, 0.87);
   background-color: #242424;
 
   font-synthesis: none;
@@ -37,7 +37,7 @@ body {
 
 .card {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
 }
 
 .card .story-line-container {
@@ -66,8 +66,8 @@ entirestory {
 
 h1 {
   font-family: 'Berkshire Swash', cursive;
-  text-shadow: 1px 1px 0px #fff;
-  color: #dd9e00;
+  text-shadow: 1px 1px 0px rgb(255, 245, 130);
+  color: rgb(194, 114, 0);
 }
 
 reference {
@@ -83,53 +83,140 @@ reference {
 }
 
 main {
-  border: 1px solid rgba(255, 241, 144, 1);
-  /* background: rgba(255, 239, 200, 0.4); */
   padding: 0.2rem;
-  border-radius: 10px;
   z-index: 1;
 }
 
 border {
   display: block;
   padding: 10px;
-  border-radius: 6px;
-  background: linear-gradient(145deg, #ffe090, #edca56);
   z-index: 1;
 }
 
-content {
+content,
+scrolltop,
+scrollbottom {
   background: linear-gradient(145deg, #ffecbb, #fff5dd, #ffefc4, #fff7e2);
   background-color: rgb(255, 245, 223);
-  background-image: url(assets/black-felt.png);
+  background-image: url(/src/assets/black-felt.png), radial-gradient(rgba(50, 50, 50, -1) 20%, rgba(50, 50, 50, 0.5));
+  background-image: url(/src/assets/black-felt.png), linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.1) 50%, rgba(50, 50, 50, 0.4));
   background-blend-mode: color-burn;
-  border-radius: 4px;
-  opacity: 95%;
   display: flex;
   justify-content: center;
   max-width: 500px;
   min-width: 30ch;
   height: auto;
   text-align: center;
+  align-items: center;
+}
+
+scrolltop,
+scrollbottom {
+  display: block;
+  height: 99.5px;
+  mask-image: url(/src/assets/top-mask.png);
+  mask-size: contain;
+  background-image: url(/src/assets/black-felt.png), url(/src/assets/scroll-shading.png), radial-gradient(rgba(50, 50, 50, 30%) 40%, rgba(50, 50, 50, 40%));
+  background-blend-mode: color-burn, hard-light;
+  background-size: cover, contain;
+  mask-repeat: no-repeat;
+  max-width: unset;
+  width: 526px;
+  margin-left: -12px;
+}
+
+scrollbottom {
+  height: 105px;
+  width: 535px;
+  margin-left: -18px;
+  mask-image: url(/src/assets/bottom-mask.png);
+  background-image: url(/src/assets/black-felt.png), url(/src/assets/scroll-bottom.png), radial-gradient(rgba(50, 50, 50, 30%) 40%, rgba(50, 50, 50, 43%));
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid white;
   padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
+  font-size: 0.8em;
+  font-weight: 700;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: transparent;
+  margin: 10px 10px;
   cursor: pointer;
-  transition: border-color 0.25s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.15s;
 }
+
 button:hover {
-  border-color: #646cff;
+  background: rgba(255, 255, 255, 0.3);
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.playback-controls button {
+  border-radius: 50% 50% 0px 0px;
+  padding: 7px 3px 4px;
+  width: 120px;
+}
+
+label {
+  display: inline-flex;
+  font-family: 'Berkshire Swash', cursive;
+  color: rgb(107, 61, 0);
+  width: auto;
+  align-items: center;
+  padding: 4px 10px 4px 24px;
+  border-radius: 0;
+  border: none;
+  text-shadow: 1px 1px 0px rgb(255, 238, 53);
+  text-transform: capitalize;
+  letter-spacing: 0px;
+  transition: all 0.15s ease-in-out;
+  /* background: rgba(255, 255, 255, 0); */
+}
+
+label:hover {
+  color: black;
+}
+
+input[type='checkbox'] {
+  visibility: hidden;
+  font-family: 'Berkshire Swash', cursive;
+  transition: all 0.15s ease-in-out;
+}
+input[type='checkbox']:before {
+  content: '✓';
+  color: transparent;
+  line-height: 0.7rem;
+  font-size: 1.1rem;
+  width: 10px;
+  height: 10px;
+  display: block;
+  position: absolute;
+  margin-left: 20px;
+  margin-top: -1px;
+  border: 1px solid rgb(107, 61, 0);
+  background: rgba(255, 255, 255, 0);
+  box-shadow: 1px 1px 0px rgb(255, 238, 53);
+  overflow: visible;
+  visibility: visible;
+  transition: all 0.15s ease-in-out;
+}
+
+input[type='checkbox']:checked:before {
+  visibility: visible;
+  font-size: 1.1rem;
+}
+
+.playback-controls input[type='checkbox']:checked:before {
+  border: 1px solid rgb(218, 149, 0);
+  color: rgb(94, 53, 0);
+}
+
+.playback-controls:hover input[type='checkbox']:checked:before {
+  color: black;
 }
 
 devcontrols {
@@ -145,16 +232,71 @@ devcontrols {
   font-weight: bold;
 }
 
+devcontrols label,
+devcontrols label:hover {
+  text-shadow: none;
+  color: white;
+}
+
+devcontrols input[type='checkbox']:before {
+  border-color: white;
+  box-shadow: none;
+}
+
+devcontrols input[type='checkbox']:disabled:before {
+  color: rgba(255, 255, 255, 0);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+devcontrols input[type='checkbox']:disabled:checked:before {
+  color: rgba(255, 255, 255, 0);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+devcontrols input[type='checkbox']:checked:before {
+  color: white;
+}
+
+.playbackbutton {
+  opacity: 1;
+  z-index: 100;
+  margin: 0px;
+  width: 80px;
+  position: absolute;
+  color: white;
+  background: rgba(0, 0, 0, 0.2);
+  border: none;
+  height: 400px;
+  transition: all 250ms ease-in-out;
+  border-radius: 0;
+}
+
+.playbackbutton.left {
+  border-radius: 50% 0 0 50%;
+  margin-left: -580px;
+}
+
+.playbackbutton.right {
+  border-radius: 0 50% 50% 0;
+  margin-left: 580px;
+}
+
+content:hover .playbackbutton {
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 1;
+}
+
+content:hover .playbackbutton:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
 nameentry {
   padding-top: 2px;
   padding-bottom: 2px;
-  
 }
 
 nameentry:nth-of-type(6) {
   padding-top: 2px;
   padding-bottom: 8px;
-
 }
 .storyForm {
   display: flex;
@@ -162,15 +304,35 @@ nameentry:nth-of-type(6) {
   padding: 15px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@media only screen and (max-width: 700px) {
+  .playbackbutton {
+    width: 60px;
+    font-size: 0.75rem;
+    color: black;
+    background: rgba(255, 255, 255, 0);
+    /* transition-duration: 0.15ms; */
+    border: 1px solid rgba(255, 255, 255, 0.8);
   }
-  a:hover {
-    color: #747bff;
+
+  content:hover .playbackbutton {
+    background: rgba(255, 255, 255, 0.1);
   }
-  button {
-    background-color: #f9f9f9;
+
+  .playbackbutton.left {
+    background: rgba(255, 255, 255, 0);
+    margin-left: -440px;
+    border-radius: 0 50% 50% 0;
+    border-width: 1px 1px 1px 0px;
+  }
+
+  .playbackbutton.right {
+    background: rgba(255, 255, 255, 0);
+    margin-left: 440px;
+    border-radius: 50% 0 0 50%;
+    border-width: 1px 0px 1px 1px;
+  }
+
+  content:hover .playbackbutton:hover {
+    background: rgba(255, 255, 255, 0.3);
   }
 }

@@ -4,7 +4,7 @@
   import type { TRelationship } from '../../../shared/dist';
   import kingUrl from '../assets/king.jpg';
   import advisorUrl from '../assets/advisor.jpg';
-  import queenUrl from '../assets/queen.jpg'
+  import queenUrl from '../assets/queen.jpg';
   import youngPrincessUrl from '../assets/young_princess.jpg';
   import youngPrinceUrl from '../assets/young_prince.jpg';
   import olderPrincessUrl from '../assets/older_princess.jpg';
@@ -20,57 +20,85 @@
   // of portraits in a future version.
   const relationshipToUrl = (relationship: TRelationship): string => {
     switch (relationship) {
-      case "King": return kingUrl;
-      case "Queen": return queenUrl;
-      case "Older Daughter": return olderPrincessUrl;
-      case "Younger Daughter": return youngPrincessUrl;
-      case "Older Son": return olderPrinceUrl;
-      case "Younger Son": return youngPrinceUrl;
-      case "General": return generalUrl;
-      case "Bishop": return bishopUrl;
-      case "Advisor": return advisorUrl;
+      case 'King':
+        return kingUrl;
+      case 'Queen':
+        return queenUrl;
+      case 'Older Daughter':
+        return olderPrincessUrl;
+      case 'Younger Daughter':
+        return youngPrincessUrl;
+      case 'Older Son':
+        return olderPrinceUrl;
+      case 'Younger Son':
+        return youngPrinceUrl;
+      case 'General':
+        return generalUrl;
+      case 'Bishop':
+        return bishopUrl;
+      case 'Advisor':
+        return advisorUrl;
       default:
-        return "none";
+        return 'none';
     }
-  }
+  };
 
   const flyInXVal = flyInFrom === 'left' ? -100 : 100;
 </script>
 
-<div class="character" in:fly={{ x:flyInXVal, delay: 300, duration: 500 }}>
+<div class="character" in:fly={{ x: flyInXVal, delay: 300, duration: 500 }}>
   {#each characters as person}
-  {#if relationshipMap[person.trim()] && relationshipToUrl(relationshipMap[person.trim()]) !== 'none'}
-    <img class={characters.length === 2 ? "character-portrait-2-up" : "character-portrait"} src={relationshipToUrl(relationshipMap[person.trim()])} alt="portrait of {person}" />
-  {/if}
-  <div>{person.trim()}</div>
+    <div class={characters.length === 2 ? 'two-up' : ''} style="background-image: url({relationshipToUrl(relationshipMap[person.trim()])})">
+      {#if relationshipMap[person.trim()] && relationshipToUrl(relationshipMap[person.trim()]) !== 'none'}
+        <img class={characters.length === 2 ? 'two-up' : ''} src={relationshipToUrl(relationshipMap[person.trim()])} alt="portrait of {person}" />
+      {/if}
+      <h3>{person.trim()}</h3>
+    </div>
   {/each}
 </div>
 
 <style>
   .character {
     width: 100px;
-    min-height: 130px;
-    border-radius: 4px;
-    /* border: 1px solid rgba(0, 0, 0, 0.2); */
-    box-shadow: -1px -1px 1px #ffd875;
-    background: rgba(255, 255, 255, 0.8);
-    /* background: linear-gradient(145deg, #ffe090, rgba(255, 255, 255, 0.5) 30px, rgba(255, 255, 255, 0.8) calc(100% - 30px), #ffe090); */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
+
     font-size: 0.8rem;
     font-weight: 700;
   }
-
-  .character-portrait {
-    max-width: 100%;
+  .character > div {
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+    box-shadow: none;
+    margin-bottom: 4px;
+    overflow: hidden;
   }
 
-  .character-portrait-2-up {
+  .character > div img {
+    opacity: 0;
+    box-shadow: -1px -1px 1px #ffd875;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: top;
+    background-color: rgba(52, 30, 18, 1);
+  }
+
+  .character > div img.two-up {
     height: 62px;
     width: 100px;
-    object-fit: cover;
-    object-position: top;
+  }
+
+  .character > div > h3 {
+    height: auto;
+    color: #ffefc4;
+    font-weight: 700;
+    font-family: 'Berkshire Swash', cursive;
+
+    background: rgba(0, 0, 0, 0.8);
+    padding: 6px 4px;
+    margin: 0px;
+    font-size: 0.85rem;
+    line-height: 100%;
   }
 </style>
