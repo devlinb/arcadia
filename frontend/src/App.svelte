@@ -50,7 +50,6 @@
 
   let test = useAutoplay ? 'on' : '';
 
-
   const handleCharacterSubmit = async (submission: TStorySubmission) => {
     await startStreamingStory(submission);
     playStory();
@@ -64,7 +63,7 @@
   // onDestroy(destroyAP);
 </script>
 
-<Music/>
+<Music />
 <main>
   <border>
     <scrolltop />
@@ -93,10 +92,18 @@
   .playback-controls {
     margin-top: -88px;
     font-weight: 400;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: end;
     position: absolute;
     z-index: 100;
     text-align: right;
     width: 500px;
+  }
+
+  @media only screen and (max-width: 700px) {
+    .playback-controls {
+      margin-top: -31px;
+    }
   }
 </style>

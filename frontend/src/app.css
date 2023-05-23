@@ -96,11 +96,18 @@ border {
 content,
 scrolltop,
 scrollbottom {
-  background: linear-gradient(145deg, #ffecbb, #fff5dd, #ffefc4, #fff7e2);
-  background-color: rgb(255, 245, 223);
-  background-image: url(/src/assets/black-felt.png), radial-gradient(rgba(50, 50, 50, -1) 20%, rgba(50, 50, 50, 0.5));
-  background-image: url(/src/assets/black-felt.png), linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.1) 50%, rgba(50, 50, 50, 0.4));
-  background-blend-mode: color-burn;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  background-color: rgb(255, 205, 97);
+  background-blend-mode: multiply, luminosity;
+}
+
+content {
+  background-image: url(/src/assets/black-felt.png), linear-gradient(rgba(255, 255, 255, 0%) 0%, rgba(255, 255, 255, 20%) 10%, rgba(255, 255, 255, 20%) 90%, rgba(255, 255, 255, 0%) 100%);
+  background-blend-mode: multiply, luminosity;
+  background-size: contain;
   display: flex;
   justify-content: center;
   max-width: 500px;
@@ -113,17 +120,17 @@ scrollbottom {
 scrolltop,
 scrollbottom {
   display: block;
-  height: 99.5px;
-  mask-image: url(/src/assets/top-mask.png);
-  -webkit-mask-image: url(/src/assets/top-mask.png);
-  -webkit-mask-size: contain;
-  background-image: url(/src/assets/black-felt.png), url(/src/assets/scroll-shading.png), radial-gradient(rgba(50, 50, 50, 30%) 40%, rgba(50, 50, 50, 40%));
-  background-blend-mode: color-burn, hard-light;
-  background-size: cover, contain;
-  -webkit-mask-repeat: no-repeat;
   max-width: unset;
+  background-size: contain, cover;
+}
+
+scrolltop {
+  height: 99.5px;
   width: 526px;
   margin-left: -12px;
+  mask-image: url(/src/assets/top-mask.png);
+  -webkit-mask-image: url(/src/assets/top-mask.png);
+  background-image: url(/src/assets/scroll-shading.png), url(/src/assets/black-felt.png);
 }
 
 scrollbottom {
@@ -132,7 +139,7 @@ scrollbottom {
   margin-left: -18px;
   mask-image: url(/src/assets/bottom-mask.png);
   -webkit-mask-image: url(/src/assets/bottom-mask.png);
-  background-image: url(/src/assets/black-felt.png), url(/src/assets/scroll-bottom.png), radial-gradient(rgba(50, 50, 50, 30%) 40%, rgba(50, 50, 50, 43%));
+  background-image: url(/src/assets/scroll-bottom.png), url(/src/assets/black-felt.png);
 }
 
 button {
@@ -144,8 +151,7 @@ button {
   background-color: transparent;
   margin: 10px 10px;
   cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  text-transform: capitalize;
   transition: all 0.15s;
 }
 
@@ -169,28 +175,34 @@ label {
   color: rgb(107, 61, 0);
   width: auto;
   align-items: center;
-  padding: 4px 10px 4px 12px;
+  padding: 4px 10px 4px 18px;
   border-radius: 0;
   border: none;
-  text-shadow: 1px 1px 0px rgb(255, 238, 53);
   text-transform: capitalize;
   letter-spacing: 0px;
   transition: all 0.15s ease-in-out;
-  /* background: rgba(255, 255, 255, 0); */
+  cursor: pointer;
 }
 
 label:hover {
   color: black;
 }
 
+label.disabled {
+  opacity: 0.6;
+}
+
 input[type='checkbox'] {
   visibility: hidden;
-  -moz-appearance:none;
+  -moz-appearance: none;
+  width: 10px;
+  height: 10px;
+  line-height: 10px;
   font-family: 'Berkshire Swash', cursive;
   transition: all 0.15s ease-in-out;
 }
-input[type=checkbox]::before {
-  
+input[type='checkbox']::before {
+  cursor: pointer;
   content: '✓';
   color: transparent;
   line-height: 0.7rem;
@@ -200,9 +212,9 @@ input[type=checkbox]::before {
   display: inline-block;
   position: relative;
   margin-left: 10px;
+  transform: translateY(-1px);
   border: 1px solid rgb(107, 61, 0);
   background: rgba(255, 255, 255, 0);
-  box-shadow: 1px 1px 0px rgb(255, 238, 53);
   overflow: visible;
   visibility: visible;
   transition: all 0.15s ease-in-out;
@@ -223,7 +235,8 @@ input[type='checkbox']:checked:before {
 }
 
 devcontrols {
-  display: block;
+  display: flex;
+  align-items: center;
   position: absolute;
   padding: 0.5rem;
   background: rgba(0, 0, 0, 0.6);
@@ -243,7 +256,10 @@ devcontrols label:hover {
 
 devcontrols input[type='checkbox']:before {
   border-color: white;
-  box-shadow: none;
+}
+
+devcontrols input[type='checkbox']:checked:before {
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 devcontrols input[type='checkbox']:disabled:before {
@@ -251,8 +267,8 @@ devcontrols input[type='checkbox']:disabled:before {
   border-color: rgba(255, 255, 255, 0.4);
 }
 devcontrols input[type='checkbox']:disabled:checked:before {
-  color: rgba(255, 255, 255, 0);
-  border-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 devcontrols input[type='checkbox']:checked:before {
@@ -308,6 +324,9 @@ nameentry:nth-of-type(6) {
 }
 
 @media only screen and (max-width: 700px) {
+  body {
+    font-size: 0.85rem;
+  }
   .playbackbutton {
     width: 60px;
     font-size: 0.75rem;
@@ -323,19 +342,52 @@ nameentry:nth-of-type(6) {
 
   .playbackbutton.left {
     background: rgba(255, 255, 255, 0);
-    margin-left: -440px;
+    margin-left: -450px;
     border-radius: 0 50% 50% 0;
     border-width: 1px 1px 1px 0px;
+    padding: 0.6em 0.6em;
+    width: 50px;
   }
 
   .playbackbutton.right {
     background: rgba(255, 255, 255, 0);
-    margin-left: 440px;
+    margin-left: 450px;
     border-radius: 50% 0 0 50%;
     border-width: 1px 0px 1px 1px;
+    padding: 0.6em 0.6em;
+    width: 50px;
   }
 
   content:hover .playbackbutton:hover {
     background: rgba(255, 255, 255, 0.3);
+  }
+
+  scrolltop,
+  scrollbottom {
+    height: 20px;
+    max-width: 500px;
+    min-width: 30ch;
+    mask-image: url(/src/assets/torn-top-mask.png);
+    -webkit-mask-image: url(/src/assets/torn-top-mask.png);
+    background-image: url(/src/assets/black-felt.png);
+    background-position: bottom;
+    mask-position: bottom;
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat-x;
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    margin-left: 0px;
+  }
+
+  scrollbottom {
+    background-position: top;
+    mask-position: top;
+    mask-image: url(/src/assets/torn-bottom-mask.png);
+    -webkit-mask-image: url(/src/assets/torn-bottom-mask.png);
+  }
+
+  content {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
 }
