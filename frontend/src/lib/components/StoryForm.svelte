@@ -101,14 +101,7 @@
     </a>
     <a href="#top" on:click={showCredits}>Credits</a>
   </div>
-  <devcontrols>
-    <input type="checkbox" bind:checked={$usePregeneratedCharacters} id="pregenCharactersCheckbox" on:click={handleOnPregenClicked} />
-    <label for="pregenCharactersCheckbox">Pregen characters</label>
-    <input type="checkbox" disabled={!$usePregeneratedCharacters} bind:checked={$usePregeneratedStory} id="pregenStoryCheckbox" />
-    <label class={!$usePregeneratedCharacters ? 'disabled' : ''} for="pregenStoryCheckbox">Pregen story</label>
-    <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox" />
-    <label for="enableMusicAndSfxCheckbox">sound</label>
-  </devcontrols>
+
   <form class="storyForm" on:submit|preventDefault={handleOnSubmit}>
     <div>Name the members in the royal house of <input type="text" style="max-width: 100px" maxlength="20" bind:value={kingdom} /></div>
     {#each characters as character (character.id)}
@@ -133,6 +126,14 @@
       {/if}
     </button>
   </form>
+  <div class="playback-controls">
+    <input type="checkbox" bind:checked={$usePregeneratedCharacters} id="pregenCharactersCheckbox" on:click={handleOnPregenClicked} />
+    <label for="pregenCharactersCheckbox">Pregen characters</label>
+    <input type="checkbox" disabled={!$usePregeneratedCharacters} bind:checked={$usePregeneratedStory} id="pregenStoryCheckbox" />
+    <label class={!$usePregeneratedCharacters ? 'disabled' : ''} for="pregenStoryCheckbox">Pregen story</label>
+    <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox" />
+    <label for="enableMusicAndSfxCheckbox">sound</label>
+  </div>
 </div>
 
 <style>
