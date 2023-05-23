@@ -1,7 +1,8 @@
 import type { TStorySubmission } from "../../../shared";
 import { get } from 'svelte/store'
 
-import { setStory, addToStory, storyState, usePregeneratedStory, completeStoryReceived } from '../stores/story.svelte';
+import { setStory, addToStory, storyState, completeStoryReceived } from '../stores/story.svelte';
+import { usePregeneratedStory } from '../stores/settings.svelte'
 import { parseOutEvents, statementEventsToStatementCecs } from "../../../shared/storyparser";
 
 /**

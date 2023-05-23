@@ -1,13 +1,15 @@
 <script lang="ts">
   import { get } from 'svelte/store';
-  import Characters from './lib/StoryForm.svelte';
+  import Modal from 'svelte-simple-modal';
+  import Characters from './lib/components/StoryForm.svelte';
   import { startStreamingStory } from './lib/StoryFetcherStreamingws';
   import { playStory, storyState, useAutoplay, handleAutoplayClicked } from './stores/story.svelte';
   import type { TStorySubmission } from '../../shared';
   import townSnowUrl from '../src/assets/town_square_snow.jpg';
   import townDayUrl from '../src/assets/town_square_day.jpg';
   import townDuskUrl from '../src/assets/town_square_dusk.jpg';
-  import StorySummary from './lib/StorySummary.svelte';
+  import StorySummary from './lib/components/StorySummary.svelte';
+  import Music from './lib/components/Music.svelte';
 
   import 'https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js';
 
@@ -43,10 +45,11 @@
   $: {
     if ($storyState === 'FINISHED') viewer.loadScene('dusk');
   }
-  import Dialogue from './lib/Dialogue.svelte';
+  import Dialogue from './lib/components/Dialogue.svelte';
   import { onDestroy } from 'svelte';
 
   let test = useAutoplay ? 'on' : '';
+
 
   const handleCharacterSubmit = async (submission: TStorySubmission) => {
     await startStreamingStory(submission);
@@ -62,12 +65,13 @@
   // onDestroy(destroyAP);
 </script>
 
+<Music/>
 <main>
   <border>
     <scrolltop />
     <content>
       {#if $storyState === 'USER_INPUT'}
-        <Characters onsubmit={handleCharacterSubmit} />
+        <Modal><Characters onsubmit={handleCharacterSubmit} /></Modal>
       {:else if $storyState === 'LOADING'}
         <div>The bards are writing your tale</div>
       {:else if $storyState === 'READY'}
