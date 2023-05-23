@@ -93,7 +93,7 @@
         <input id="ap-checkbox" type="checkbox" bind:checked={$useAutoplay} on:click={handleAutoplayClicked} />
         <label for="ap-checkbox">auto advance</label>
         <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox" />
-        <label for="enableMusicAndSfxCheckbox">sound</label>
+        <label for="enableMusicAndSfxCheckbox">music</label>
       </div>
     {/if}
   </border>
