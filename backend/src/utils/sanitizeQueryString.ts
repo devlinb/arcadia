@@ -1,5 +1,5 @@
 import { UrlWithParsedQuery } from 'url';
-import { TCharacter, TStorySubmission } from '../shared/dist';
+import { TCharacter, TStorySubmission } from '../shared';
 
 // Never trust user input! This function truncates the Kingdom name to 20 and character
 // names to 12.
