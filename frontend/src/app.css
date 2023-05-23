@@ -115,11 +115,12 @@ scrollbottom {
   display: block;
   height: 99.5px;
   mask-image: url(/src/assets/top-mask.png);
-  mask-size: contain;
+  -webkit-mask-image: url(/src/assets/top-mask.png);
+  -webkit-mask-size: contain;
   background-image: url(/src/assets/black-felt.png), url(/src/assets/scroll-shading.png), radial-gradient(rgba(50, 50, 50, 30%) 40%, rgba(50, 50, 50, 40%));
   background-blend-mode: color-burn, hard-light;
   background-size: cover, contain;
-  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
   max-width: unset;
   width: 526px;
   margin-left: -12px;
@@ -130,6 +131,7 @@ scrollbottom {
   width: 535px;
   margin-left: -18px;
   mask-image: url(/src/assets/bottom-mask.png);
+  -webkit-mask-image: url(/src/assets/bottom-mask.png);
   background-image: url(/src/assets/black-felt.png), url(/src/assets/scroll-bottom.png), radial-gradient(rgba(50, 50, 50, 30%) 40%, rgba(50, 50, 50, 43%));
 }
 
