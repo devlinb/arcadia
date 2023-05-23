@@ -169,7 +169,7 @@ label {
   color: rgb(107, 61, 0);
   width: auto;
   align-items: center;
-  padding: 4px 10px 4px 24px;
+  padding: 4px 10px 4px 12px;
   border-radius: 0;
   border: none;
   text-shadow: 1px 1px 0px rgb(255, 238, 53);
@@ -185,20 +185,21 @@ label:hover {
 
 input[type='checkbox'] {
   visibility: hidden;
+  -moz-appearance:none;
   font-family: 'Berkshire Swash', cursive;
   transition: all 0.15s ease-in-out;
 }
-input[type='checkbox']:before {
+input[type=checkbox]::before {
+  
   content: '✓';
   color: transparent;
   line-height: 0.7rem;
   font-size: 1.1rem;
   width: 10px;
   height: 10px;
-  display: block;
-  position: absolute;
-  margin-left: 20px;
-  margin-top: -1px;
+  display: inline-block;
+  position: relative;
+  margin-left: 10px;
   border: 1px solid rgb(107, 61, 0);
   background: rgba(255, 255, 255, 0);
   box-shadow: 1px 1px 0px rgb(255, 238, 53);
