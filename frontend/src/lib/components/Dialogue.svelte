@@ -49,7 +49,9 @@
     {/if}
   </div>
   <div class="story-line-container">
-    {$currentStatement.statement}
+    <div>
+      {$currentStatement.statement}
+    </div>
   </div>
 </div>
 
