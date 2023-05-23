@@ -20,6 +20,7 @@ function createParagraphProcessor(ws: WebSocket.WebSocket) {
     paragraph += word;
     if (word.endsWith('\n')) {
       // Call the newline callback function
+      console.log(paragraph);
       parseAndSendStoryLine(ws, paragraph);
       // Reset the paragraph string
       paragraph = '';
@@ -98,16 +99,17 @@ const handleInitialConnection = async (
         ws.close();
       },
       (error: unknown) => {
+        console.log(`Error streaming content: ${JSON.stringify(error)}`);
         ws.send(JSON.stringify({ type: 'error', payload: error }));
         ws.close();
       }
     );
   } catch (e) {
+    console.log(`Got an error in outermost handler: ${JSON.stringify(e)}`);
     ws.send(
       JSON.stringify({ type: 'error', payload: { error: JSON.stringify(e) } })
     );
     ws.close();
-    console.log(e);
   }
 };
 
