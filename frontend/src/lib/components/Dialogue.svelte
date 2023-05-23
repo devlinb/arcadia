@@ -1,14 +1,6 @@
 <script lang="ts">
   import { fly, fade } from 'svelte/transition';
-  import {
-    currentStatement,
-    currentEvent,
-    playStory,
-    stopStory,
-    previousStatement,
-    nextStatement,
-    resetStory
-  } from '../../stores/story.svelte';
+  import { currentStatement, currentEvent, playStory, stopStory, previousStatement, nextStatement, resetStory } from '../../stores/story.svelte';
   import CharacterCard from './CharacterCard.svelte';
   import SfxPlayer from './SfxPlayer.svelte';
 
@@ -24,9 +16,10 @@
     }
   }
 </script>
+
 <button class="playbackbutton left" on:click={previousStatement}>prev</button>
 
-<SfxPlayer/>
+<SfxPlayer />
 
 <div class="card">
   <!-- sometimes we have a story line and no action at all-->
@@ -45,10 +38,20 @@
           {/if}
         </div>
       {/key}
+    {:else}
+      <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>
+        <div class="character">
+          <div style="background: url(/src/assets/book.png) no-repeat center center; background-size: 300px">
+            <img src="/src/assets/book.png" style="width: 100%; opacity: 0;" alt="open book" />
+          </div>
+        </div>
+      </div>
     {/if}
   </div>
   <div class="story-line-container">
-    {$currentStatement.statement}
+    <div>
+      {$currentStatement.statement}
+    </div>
   </div>
 </div>
 

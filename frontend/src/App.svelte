@@ -4,6 +4,8 @@
   import Characters from './lib/components/StoryForm.svelte';
   import { startStreamingStory } from './lib/StoryFetcherStreamingws';
   import { playStory, storyState, useAutoplay, handleAutoplayClicked } from './stores/story.svelte';
+  import { usePregeneratedCharacters, usePregeneratedStory, enableMusicAndSfx } from './stores/settings.svelte';
+
   import type { TStorySubmission } from '../../shared';
   import townSnowUrl from '../src/assets/town_square_snow.jpg';
   import townDayUrl from '../src/assets/town_square_day.jpg';
@@ -12,6 +14,12 @@
   import Music from './lib/components/Music.svelte';
 
   import 'https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js';
+
+  const handleUseSoundClicked = (e) => {
+    if (e.currentTarget.checked) {
+    } else {
+    }
+  };
 
   // @ts-ignore
   const viewer = pannellum.viewer('panorama', {
@@ -50,7 +58,6 @@
 
   let test = useAutoplay ? 'on' : '';
 
-
   const handleCharacterSubmit = async (submission: TStorySubmission) => {
     await startStreamingStory(submission);
     playStory();
@@ -64,7 +71,7 @@
   // onDestroy(destroyAP);
 </script>
 
-<Music/>
+<Music />
 <main>
   <border>
     <scrolltop />
@@ -82,8 +89,11 @@
     <scrollbottom />
     {#if $storyState !== 'USER_INPUT'}
       <div class="playback-controls">
+        <button on:click={() => location.reload()}>Start Over</button>
         <input id="ap-checkbox" type="checkbox" bind:checked={$useAutoplay} on:click={handleAutoplayClicked} />
         <label for="ap-checkbox">auto advance</label>
+        <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox" />
+        <label for="enableMusicAndSfxCheckbox">sound</label>
       </div>
     {/if}
   </border>
@@ -93,10 +103,18 @@
   .playback-controls {
     margin-top: -88px;
     font-weight: 400;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: end;
     position: absolute;
     z-index: 100;
     text-align: right;
     width: 500px;
+  }
+
+  @media only screen and (max-width: 700px) {
+    .playback-controls {
+      margin-top: -31px;
+    }
   }
 </style>

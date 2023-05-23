@@ -6,8 +6,8 @@
   import { getContext } from 'svelte';
   import type { Open, Close } from 'svelte-simple-modal';
   import githubLogoUrl from '../../assets/github-mark.png';
-  const { open, close } = getContext('simple-modal') as { open: Open, close: Close };
-  const showCredits= () => open(Credits);
+  const { open, close } = getContext('simple-modal') as { open: Open; close: Close };
+  const showCredits = () => open(Credits);
 
   /**
    * This file collects the kingdom name and the name of all the characters. All characters have a name and a relationship
@@ -94,24 +94,14 @@
   handleOnAdd();
 </script>
 
-<div class='card'>
-  <div class='credits-group'>
+<div class="card">
+  <div class="credits-group">
     <a href="https://github.com/devlinb/arcadia/">
-      <img
-        alt="Github logo indicating link to source code"
-        src={githubLogoUrl} 
-        width="16px" height="16px" />
+      <img alt="Github logo indicating link to source code" src={githubLogoUrl} width="16px" height="16px" />
     </a>
-    <a href='#top' on:click={showCredits}>Credits</a>
+    <a href="#top" on:click={showCredits}>Credits</a>
   </div>
-  <devcontrols>
-    <input type="checkbox" bind:checked={$usePregeneratedCharacters} id="pregenCharactersCheckbox" on:click={handleOnPregenClicked} />
-    <label for="pregenCharactersCheckbox">Pregenerated characters?</label>
-    <input type="checkbox" disabled={!$usePregeneratedCharacters} bind:checked={$usePregeneratedStory} id="pregenStoryCheckbox" />
-    <label for="pregenStoryCheckbox">Pregenerated story?</label>
-    <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox"/>
-    <label for="enableMusicAndSfxCheckbox">Enable sound and music</label>
-  </devcontrols>
+
   <form class="storyForm" on:submit|preventDefault={handleOnSubmit}>
     <div>Name the members in the royal house of <input type="text" style="max-width: 100px" maxlength="20" bind:value={kingdom} /></div>
     {#each characters as character (character.id)}
@@ -136,14 +126,20 @@
       {/if}
     </button>
   </form>
-
+  <div class="playback-controls">
+    <input type="checkbox" bind:checked={$usePregeneratedCharacters} id="pregenCharactersCheckbox" on:click={handleOnPregenClicked} />
+    <label for="pregenCharactersCheckbox">Pregen characters</label>
+    <input type="checkbox" disabled={!$usePregeneratedCharacters} bind:checked={$usePregeneratedStory} id="pregenStoryCheckbox" />
+    <label class={!$usePregeneratedCharacters ? 'disabled' : ''} for="pregenStoryCheckbox">Pregen story</label>
+    <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox" />
+    <label for="enableMusicAndSfxCheckbox">sound</label>
+  </div>
 </div>
 
-  <style>
-    .credits-group {
-      margin-top: 5px;
-      display: flex;
-      justify-content: space-between;
-    }
-  </style>
-
+<style>
+  .credits-group {
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
