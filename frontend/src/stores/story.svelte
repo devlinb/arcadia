@@ -66,9 +66,9 @@
   };
 
   export const playStory = () => {
-    if (get(useAutoplay)) {
+    
       storyProgressTimer = setTimeout(() => {
-        nextStatement();
+        if (get(useAutoplay)) { nextStatement(); } // only advance if autoplay is set.
         if (get(storyState) !== 'FINISHED') {
           playStory();
         }
@@ -78,7 +78,6 @@
           statements[get(statementIndex)].CeC.length
         : readingTimeInMilliseconds(statements[get(statementIndex)].statement)
       );
-    }
   };
 
   export const stopStory = () => {
@@ -173,7 +172,6 @@
   export let useAutoplay: Writable<boolean> = writable(true);
 
   export const handleAutoplayClicked = (e) => {
-    console.log('Auto Advance = ' + e.currentTarget.checked);
     if (e.currentTarget.checked) {
       playStory();
     } else {

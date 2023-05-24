@@ -1,6 +1,12 @@
 <script lang="ts">
   import { fly, fade } from 'svelte/transition';
-  import { currentStatement, currentEvent, playStory, stopStory, previousStatement, nextStatement, resetStory } from '../../stores/story.svelte';
+  import {
+    currentStatement, 
+    currentEvent,
+    playStory,
+    previousStatement,
+    nextStatement,
+    useAutoplay } from '../../stores/story.svelte';
   import CharacterCard from './CharacterCard.svelte';
   import SfxPlayer from './SfxPlayer.svelte';
 
