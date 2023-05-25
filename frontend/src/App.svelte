@@ -3,7 +3,7 @@
   import Modal from 'svelte-simple-modal';
   import Characters from './lib/components/StoryForm.svelte';
   import { startStreamingStory } from './lib/StoryFetcherStreamingws';
-  import { playStory, storyState, useAutoplay, handleAutoplayClicked } from './stores/story.svelte';
+  import { playStory, storyState, useAutoplay } from './stores/story.svelte';
   import { usePregeneratedCharacters, usePregeneratedStory, enableMusicAndSfx } from './stores/settings.svelte';
 
   import type { TStorySubmission } from '../../shared';
@@ -90,7 +90,7 @@
     {#if $storyState !== 'USER_INPUT'}
       <div class="playback-controls">
         <button on:click={() => location.reload()}>Start Over</button>
-        <input id="ap-checkbox" type="checkbox" bind:checked={$useAutoplay} on:click={handleAutoplayClicked} />
+        <input id="ap-checkbox" type="checkbox" bind:checked={$useAutoplay} />
         <label for="ap-checkbox">auto advance</label>
         <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox" />
         <label for="enableMusicAndSfxCheckbox">music</label>

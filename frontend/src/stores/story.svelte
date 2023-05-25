@@ -138,6 +138,8 @@
     if (stIndex === statements.length - 1) { // Either next event or finished
       if (statements[stIndex].CeC && statements[stIndex].CeC.length - 1 > evIndex) {
         eventIndex.set(evIndex + 1);
+        stopStory();
+        playStory();
         return;
       } else {
         storyState.set("FINISHED");
@@ -170,12 +172,4 @@
   };
 
   export let useAutoplay: Writable<boolean> = writable(true);
-
-  export const handleAutoplayClicked = (e) => {
-    if (e.currentTarget.checked) {
-      playStory();
-    } else {
-      stopStory();
-    }
-  };
 </script>
