@@ -115,6 +115,7 @@
   @media only screen and (max-width: 700px) {
     .playback-controls {
       margin-top: -31px;
+      width: 100%;
     }
   }
 </style>
