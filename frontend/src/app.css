@@ -61,6 +61,7 @@ entirestory {
   color: #312300;
   font-family: 'Berkshire Swash', cursive;
   text-align: justify;
+  margin: auto;
 }
 
 .dialogue-container {
