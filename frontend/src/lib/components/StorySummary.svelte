@@ -12,7 +12,7 @@
   let showCopiedText = false;
 
   const handleCopyClicked = (storyId: string) => {
-    navigator.clipboard.writeText(`${window.location.origin}/${storyId}`);
+    navigator.clipboard.writeText(`${window.location.origin}/?${storyId}`);
     showCopiedText = true;
     setTimeout(() => showCopiedText = false, 5000);
   }
@@ -38,7 +38,7 @@
       <p>{error}</p>
     {/await}
   {:else}
-      <button on:click={handleClick}>Save the tail</button>
+      <button on:click={handleClick}>Save the tale</button>
   {/if}
 </entirestory>
 

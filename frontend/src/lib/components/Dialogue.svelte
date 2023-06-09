@@ -9,6 +9,7 @@
     useAutoplay } from '../../stores/story.svelte';
   import CharacterCard from './CharacterCard.svelte';
   import SfxPlayer from './SfxPlayer.svelte';
+  import bookUrl from '../../assets/book.png';
 
   let key;
 
@@ -47,8 +48,8 @@
     {:else}
       <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>
         <div class="character">
-          <div style="background: url(/src/assets/book.png) no-repeat center center; background-size: 300px">
-            <img src="/src/assets/book.png" style="width: 100%; opacity: 0;" alt="open book" />
+          <div style="background: url({bookUrl}) no-repeat center center; background-size: 300px">
+            <img src={bookUrl} style="width: 100%; opacity: 0;" alt="open book" />
           </div>
         </div>
       </div>

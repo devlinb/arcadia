@@ -70,9 +70,9 @@
   /**
    * Check pathname to see we got a shared story link
    */
-  if (window.location.pathname.length > 7 && window.location.pathname.length < 15) {
+  if (window.location.search.length > 7 && window.location.search.length < 15) {
       storyState.set('LOADING_SAVED');
-      storyId = window.location.pathname.slice(1);
+      storyId = window.location.search.slice(1);
   }
 
   const handleOnStoryIdSubmit = (enteredStoryId: string) => {
