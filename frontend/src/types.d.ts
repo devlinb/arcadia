@@ -8,5 +8,6 @@ export type TStoryState =
   | "LOADING"
   | "STREAMING" // Story is incoming
   | "AUTOPLAY_WAITING" // We've ran out of statements
+  | "LOADING_SAVED"
   | "READY" // Story is fully loaded.
   | "FINISHED";

@@ -1,0 +1,92 @@
+{
+    "$ref": "#/definitions/TStoryData",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+      "TCharactersEventCharacters": {
+        "additionalProperties": false,
+        "properties": {
+          "eventEmoji": {
+            "type": "string"
+          },
+          "left": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "right": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "left",
+          "eventEmoji"
+        ],
+        "type": "object"
+      },
+      "TNamesToRelationship": {
+        "additionalProperties": {
+          "$ref": "#/definitions/TRelationship"
+        },
+        "type": "object"
+      },
+      "TRelationship": {
+        "enum": [
+          "King",
+          "Queen",
+          "Older Daughter",
+          "Younger Daughter",
+          "Older Son",
+          "Younger Son",
+          "General",
+          "Bishop",
+          "Advisor",
+          "King's Brother",
+          "Queen's Brother",
+          "King's Newphew"
+        ],
+        "type": "string"
+      },
+      "TStatementCeC": {
+        "additionalProperties": false,
+        "properties": {
+          "CeC": {
+            "items": {
+              "$ref": "#/definitions/TCharactersEventCharacters"
+            },
+            "type": "array"
+          },
+          "statement": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "statement"
+        ],
+        "type": "object"
+      },
+      "TStoryData": {
+        "additionalProperties": false,
+        "properties": {
+          "relationships": {
+            "$ref": "#/definitions/TNamesToRelationship"
+          },
+          "statements": {
+            "items": {
+              "$ref": "#/definitions/TStatementCeC"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "relationships",
+          "statements"
+        ],
+        "type": "object"
+      }
+    }
+  }
+  

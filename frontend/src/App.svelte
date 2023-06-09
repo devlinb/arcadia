@@ -4,13 +4,14 @@
   import Characters from './lib/components/StoryForm.svelte';
   import { startStreamingStory } from './lib/StoryFetcherStreamingws';
   import { playStory, storyState, useAutoplay } from './stores/story.svelte';
-  import { usePregeneratedCharacters, usePregeneratedStory, enableMusicAndSfx } from './stores/settings.svelte';
-
+  import { enableMusicAndSfx } from './stores/settings.svelte';
+  
   import type { TStorySubmission } from '../../shared';
   import townSnowUrl from '../src/assets/town_square_snow.jpg';
   import townDayUrl from '../src/assets/town_square_day.jpg';
   import townDuskUrl from '../src/assets/town_square_dusk.jpg';
   import StorySummary from './lib/components/StorySummary.svelte';
+  import SavedStory from './lib/components/SavedStory.svelte';
   import Music from './lib/components/Music.svelte';
 
   import 'https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js';
@@ -56,7 +57,6 @@
   import Dialogue from './lib/components/Dialogue.svelte';
   import { onDestroy } from 'svelte';
 
-  let test = useAutoplay ? 'on' : '';
 
   const handleCharacterSubmit = async (submission: TStorySubmission) => {
     await startStreamingStory(submission);
@@ -65,10 +65,20 @@
     // @ts-ignore
     viewer.loadScene('snow');
   };
-  $: className = get(useAutoplay);
-  // let apclassname = '';
-  // const destroyAP = useAutoplay.subscribe((value) => (apclassname = value ? 'on' : 'off'));
-  // onDestroy(destroyAP);
+
+  let storyId: string = '';
+  /**
+   * Check pathname to see we got a shared story link
+   */
+  if (window.location.pathname.length > 7 && window.location.pathname.length < 15) {
+      storyState.set('LOADING_SAVED');
+      storyId = window.location.pathname.slice(1);
+  }
+
+  const handleOnStoryIdSubmit = (enteredStoryId: string) => {
+    storyId = enteredStoryId;
+    storyState.set('LOADING_SAVED');
+  }
 </script>
 
 <Music />
@@ -77,31 +87,34 @@
     <scrolltop />
     <content>
       {#if $storyState === 'USER_INPUT'}
-        <Modal><Characters onsubmit={handleCharacterSubmit} /></Modal>
+        <Modal><Characters onsubmit={handleCharacterSubmit} handleOnStoryIdSubmit={handleOnStoryIdSubmit}/></Modal>
       {:else if $storyState === 'LOADING'}
         <div>The bards are writing your tale</div>
+      {:else if $storyState === 'LOADING_SAVED'}
+        <SavedStory storyId={storyId}/>
       {:else if $storyState === 'READY' || $storyState === 'STREAMING' || $storyState === 'AUTOPLAY_WAITING'}
         <Dialogue />
       {:else if $storyState === 'FINISHED'}
         <StorySummary />
       {/if}
     </content>
-    <scrollbottom />
+    <scrollbottom>
     {#if $storyState !== 'USER_INPUT'}
       <div class="playback-controls">
-        <button on:click={() => location.reload()}>Start Over</button>
+        <button on:click={() => window.location.assign(window.location.origin)}>Start Over</button>
         <input id="ap-checkbox" type="checkbox" bind:checked={$useAutoplay} />
         <label for="ap-checkbox">auto advance</label>
         <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox" />
         <label for="enableMusicAndSfxCheckbox">music</label>
       </div>
     {/if}
+    </scrollbottom>
   </border>
 </main>
 
 <style>
   .playback-controls {
-    margin-top: -88px;
+    margin-top: 20px;
     font-weight: 400;
     display: flex;
     align-items: center;
@@ -114,7 +127,7 @@
 
   @media only screen and (max-width: 700px) {
     .playback-controls {
-      margin-top: -31px;
+      margin-top: -15px;
       width: 100%;
     }
   }

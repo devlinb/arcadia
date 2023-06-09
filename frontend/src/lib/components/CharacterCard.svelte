@@ -15,6 +15,7 @@
   import kingsNephew from '../../assets/kings_nephew.jpg';
   import queensBrother from '../../assets/queens_brother.jpg';
 
+  console.log(`relationshipMap: ${JSON.stringify(relationshipMap)}`);
   // This is how Svelte does props!
   export let characters: string[];
   export let flyInFrom: 'left' | 'right';

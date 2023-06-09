@@ -62,6 +62,7 @@ entirestory {
   font-family: 'Berkshire Swash', cursive;
   text-align: justify;
   margin: auto;
+  margin-bottom: 10ex;
 }
 
 .dialogue-container {
@@ -169,6 +170,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+
 /* .playback-controls button {
   border-radius: 50% 50% 0px 0px;
   padding: 7px 3px 4px;
@@ -199,6 +201,15 @@ label,
 .playback-controls button:hover {
   background: transparent;
   border: 1px solid rgba(107, 61, 0, 1);
+}
+
+.playback-control button[disabled=disabled], button:disabled {
+  border: 0px;
+  color: rgb(202, 156, 95); 
+}
+
+.playback-control button[disabled=disabled]:hover, button:disabled:hover {
+  border: 0px;
 }
 
 label:hover {
@@ -395,7 +406,12 @@ nameentry:nth-of-type(6) {
     margin-left: 0px;
   }
 
+  scrolltop {
+    margin-bottom: -1px; /* Prevents 1px gap when scaling */
+  }
+
   scrollbottom {
+    margin-top: -1px; /* Prevents 1px gap when scaling */
     background-position: top;
     mask-position: top;
     mask-image: url(/src/assets/torn-bottom-mask.png);

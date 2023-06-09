@@ -4,6 +4,7 @@
   "description": "Fantasy Drama Simulator using AI",
   "main": "index.js",
   "scripts": {
+    "prebuild": "copyfiles -u 1 src/**/*.json dist",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "node ./dist/app.js",
@@ -17,7 +18,9 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/node": "^18.15.10",
+    "@types/shortid": "^0.0.29",
     "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard-with-typescript": "^34.0.1",
@@ -31,11 +34,18 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.345.0",
+    "@aws-sdk/s3-request-presigner": "^3.345.0",
     "@types/ws": "^8.5.4",
+    "ajv": "^8.12.0",
+    "axios": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "multer-s3": "^3.0.1",
     "openai": "^3.2.1",
+    "shortid": "^2.2.16",
     "streamed-chatgpt-api": "^1.0.7",
     "url": "^0.11.0",
     "ws": "^8.13.0"

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { TRelationship, TCharacter, TStorySubmission } from '../../../../shared/dist';
+  import type { TRelationship, TCharacter, TStorySubmission } from '../../../../shared';
   import { relationshipMap } from '../../stores/story.svelte';
   import { usePregeneratedCharacters, usePregeneratedStory, enableMusicAndSfx } from '../../stores/settings.svelte';
   import Credits from './Credits.svelte';
@@ -17,6 +17,9 @@
    */
 
   export let onsubmit: (characters: TStorySubmission) => void;
+  let storyId: string;
+  export let handleOnStoryIdSubmit: (storyId: string) => void;
+  
   const relationships: Array<TRelationship> = ['King', 'Older Daughter', 'Younger Daughter', 'Older Son', 'Younger Son', 'General', 'Queen', 'Bishop', 'Advisor', "King's Brother", "Queen's Brother", "King's Newphew"];
   const defaults: Array<TCharacter> = [
     { id: 0, name: 'Henry', relationship: 'King' },
@@ -57,7 +60,7 @@
     unusedRelationships = unusedRelationships;
   };
 
-  const handleOnSubmit = () => {
+  const handleOnCharacterSubmit = () => {
     for (const character of characters) {
       relationshipMap[character.name] = character.relationship;
     }
@@ -65,7 +68,6 @@
   };
 
   const onKeyup = (e) => {
-    console.log(e.keyCode);
     switch (e.keyCode) {
       case 1:
         break;
@@ -76,6 +78,11 @@
   };
   window.addEventListener('keyup', onKeyup);
 
+  const storyIdValid = (storyId: string) => {
+    
+    return !(storyId && storyId.length >= 7 && storyId.length <= 15);
+  }
+  
   const handleOnPregenClicked = (e) => {
     if (e.currentTarget.checked) {
       characters.length = 0;
@@ -102,7 +109,7 @@
     <a href="#top" on:click={showCredits}>Credits</a>
   </div>
 
-  <form class="storyForm" on:submit|preventDefault={handleOnSubmit}>
+  <form class="storyForm" on:submit|preventDefault={handleOnCharacterSubmit}>
     <div>Name the members in the royal house of <input type="text" style="max-width: 100px" maxlength="20" bind:value={kingdom} /></div>
     {#each characters as character (character.id)}
       <nameentry>
@@ -131,6 +138,10 @@
     <label for="pregenCharactersCheckbox">Pregen characters</label>
     <input type="checkbox" disabled={!$usePregeneratedCharacters} bind:checked={$usePregeneratedStory} id="pregenStoryCheckbox" />
     <label class={!$usePregeneratedCharacters ? 'disabled' : ''} for="pregenStoryCheckbox">Pregen story</label>
+    <form on:submit|preventDefault={() => handleOnStoryIdSubmit(storyId)}>
+      <input type="text" id="storyIdInput" bind:value={storyId} minlength="7" maxlength="15" placeholder="story id"/>
+      <button type="submit">Load a saved story</button><br/>
+    </form>
   </div>
 </div>
 

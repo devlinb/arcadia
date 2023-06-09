@@ -33,3 +33,18 @@ export type TStatementCeC = {
   statement: string;
   CeC?: Array<TCharactersEventCharacters>;
 };
+
+// TODO: Do this properly, a dictionary or something.
+export type TNamesToRelationship = {
+  [key: string]: TRelationship;
+};
+
+export type TSavedStory = {
+  summary: string;
+  storyData: TStoryData;
+};
+
+export type TStoryData = {
+  relationships: TNamesToRelationship;
+  statements: TStatementCeC[];
+};

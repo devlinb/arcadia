@@ -27,4 +27,4 @@ export const sanitizeQueryString = (
     characters,
   };
   return submission;
-}
+};

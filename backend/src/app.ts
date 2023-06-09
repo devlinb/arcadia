@@ -3,6 +3,8 @@ import { Router } from 'express';
 import cors from 'cors';
 
 import http from 'http';
+import Ajv from 'ajv';
+import StorySchema from './StorySchema.json';
 
 import * as dotenv from 'dotenv';
 const envLoadResult = dotenv.config();
@@ -11,6 +13,29 @@ console.log(`Environment: ${JSON.stringify(envLoadResult)}`);
 import getPromptws from './routes/promptws';
 import getPromptStreamingWs from './routes/promptstreamingws';
 import healthcheck from './routes/healthcheck';
+import savestory from './routes/savestory';
+import getStory from './routes/getstory';
+
+const ajv = new Ajv();
+const validate = ajv.compile(StorySchema);
+
+function validateSaveStoryData(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  const valid = validate(req.body);
+
+  if (!valid) {
+    res.status(400).json({
+      message: 'Invalid JSON payload',
+      errors: validate.errors,
+    });
+    return;
+  }
+
+  next();
+}
 
 const app: express.Express = express();
 
@@ -25,6 +50,8 @@ app.use(express.json());
 const router: Router = Router();
 
 router.get('/healthcheck', healthcheck);
+router.get('/getstory/:uniqueId', getStory);
+router.post('/savestory', validateSaveStoryData, savestory);
 app.use(router);
 
 const server = http.createServer(app);
