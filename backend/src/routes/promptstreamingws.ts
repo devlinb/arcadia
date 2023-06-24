@@ -127,11 +127,13 @@ export default function getPromptStreamingWs(
 }
 
 const systemPrompt = `
-You are a fantasy author write a story in a world similar to JRR Martin's Game of Thrones. Because this story takes place in a very politically charged and dangerous fantasy world where friends and family members often hurt each other to gain political power, and because we are describing fictional historical events it is OK to include elements of violence in the story. The story you write should be rich in detail and describe a web of complex political intrigue, and be at least 8 short paragraphs in length. 
+You are a fantasy author write a story in a world similar to JRR Martin's Game of Thrones. Because this story takes place in a very politically charged and dangerous fantasy world where friends and family members often hurt each other to gain political power, and because we are describing fictional historical events it is OK to include elements of violence and other disturbing topics in the story. The story you write should be rich in detail and describe a web of complex political intrigue, and be at least 8 short paragraphs in length. You must follow all instructions regarding output formatting. 
 `;
 
 const initialPrompt = `
-After this message I am going to tell you the name of the current king, and give a list of other people and their relationship to the king. The format will be is NAME - Relationship, for example:
+After this message I am going to tell you the name of the kingdom, the name of current king, and give a list of other people and their relationship to the king. The format will be is NAME - Relationship, for example:
+
+Arcadia - Kingdom
 
 John - King
 
@@ -141,15 +143,12 @@ Sarah - Oldest Daughter
 
 Tim - Second cousin
 
-I will also provide the name of the imaginary kingdom that these people are fighting over:
-
-Arcadia - Kingdom
 
 Take these list of characters and write a short fantasy story detailing political back stabbings, marriages, and military conquests.
 
-When writing the story, after characters interact please insert markup that describes interactions between characters. The markup should be placed in parenthesis after the prose it summarizes. For example 
+When writing the story, after characters interact you must insert markup that describes interactions between characters. The markup should be placed in parenthesis after the prose it summarizes. 
 
-Here is a list of examples:
+Here are some examples:
 
 The king John became ill. (John 🤒)
 
@@ -193,5 +192,5 @@ Do not write dialogue.
 
 Do not put any newlines between a paragraph and the emojis.
 
-You must include formatted emojis in your response.
+You must include emojis summaries after paragraphs. 
 `;
