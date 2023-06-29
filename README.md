@@ -39,7 +39,7 @@ The `shared` folder is symlinked into the `backend` and `frontend` folders, a ni
 ### Backend
 The backend is a minimal Express.js server that demonstrates how to prompt GPT so it gives structured responses, and then parsing those responses. Two examples of fetching from GPT are included, one hitting the REST endpoint for chat, and a second showing streaming responses for chat. In both cases results over sent from the server over a web socket to the front end web client.
 
-To get the backend working you will need to create your own `.env` file with your `OPENAI_API_KEY` key in it.
+To get the backend working you will need to create your own `.env` file with your `OPENAI_API_KEY` key in it. If you want to save stories you'll also need do add AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. Note that sadly vultr is hard coded as the s3 provider, that needs to be extracted to the env file as well at some point.
 
 ### Frontend
 The front end is a Svelte web app that gathers the name of the members of the royal court, sends it off to the backend, and when a story is fetched, animates it on the [`Dialogue.svelte`](/frontend/src/lib/Dialogue.svelte) component.
@@ -47,6 +47,8 @@ The front end is a Svelte web app that gathers the name of the members of the ro
 ### Shared
 
 Common types and utility functions are in `shared`. Primarily used for data types that are shared by the front end and the back end.
+
+Due to build issues on some OSs, sadly backend now has a hard copy of shared types, need to figure out why symlinking isn't being picked up on MacOS.
 
 # Building and Running
 To run the project, do the following:
@@ -71,10 +73,11 @@ Upcoming features:
 1. Text to speech narration
 2. ~~Streaming responses from ChatGPT to reduce response time from 30 seconds down to 5 seconds~~
   - Adding in TTS will probably make this go back up to 30 seconds! But we need this so the result isn't 30s+30s=1 minute wait in total.
-3. Music
-4. Sound effects triggers off of emojis
-5. The ability to save, replay, and share stories.
+3. ~~Music~~
+4. ~~Sound effects triggers off of emojis~~
+5. ~~The ability to save, replay, and share stories.~~
 6. Fixes for the navigation button UX
    a. Buttons need styling
    b. Buttons need proper state handling
 7. Needs a complete accessibility passthrough.
+8. Extract s3 stuff in backend to all be in the env file.
