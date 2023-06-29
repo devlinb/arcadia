@@ -33,7 +33,7 @@
 
   <h1 id="card-header">Our story unfolds...</h1>
   <div class="dialogue-container">
-    {#if $currentStatement.CeC}
+    {#if $currentStatement.CeC && $currentStatement.CeC[0] && $currentStatement.CeC[0].left }
       {#key key}
         <div class="characters" out:fly={{ x: 100, delay: 0, duration: 200 }}>
           <CharacterCard characters={$currentEvent.left} flyInFrom={'left'} />

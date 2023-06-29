@@ -3,7 +3,7 @@
   import type { Writable } from 'svelte/store';
   import type { TCharactersEventCharacters, TRelationship, TStatementCeC } from '../../../shared';
   import type { TStoryState } from '../types';
-  import type { TNamesToRelationship } from '../../../shared/types';
+  import type { TNamesToCharacterInfo, TNamesToRelationship } from '../../../shared/types';
 
   /**
    * Datastore for everything story related. Important structures:
@@ -29,7 +29,7 @@
 
   export let statements: Array<TStatementCeC> = [];
 
-
+  export let namesToCharacterInfo: TNamesToCharacterInfo = {};
   export let relationshipMap: TNamesToRelationship = {};
 
   let statementIndex: Writable<number> = writable(0); // What statement in the array we are currently on;

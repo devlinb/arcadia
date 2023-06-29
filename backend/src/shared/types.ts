@@ -12,6 +12,8 @@ export type TRelationship =
   | "Queen's Brother"
   | "King's Newphew";
 
+export type TSkinColorStrings = 'a' | 'c' | 'db' | 'mb';
+
 export type TCharacter = {
   id: number;
   name: string;
@@ -39,12 +41,16 @@ export type TNamesToRelationship = {
   [key: string]: TRelationship;
 };
 
+export type TNamesToCharacterInfo = {
+  [key: string]: { relationship: TRelationship; skinColor: TSkinColorStrings };
+};
+
 export type TSavedStory = {
   summary: string;
   storyData: TStoryData;
 };
 
 export type TStoryData = {
-  relationships: TNamesToRelationship;
+  characterInfo: TNamesToCharacterInfo;
   statements: TStatementCeC[];
 };

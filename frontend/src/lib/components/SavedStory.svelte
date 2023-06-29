@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { relationshipMap, playStory, storyState, setStory } from '../../stores/story.svelte';
+  import { namesToCharacterInfo, playStory, storyState, setStory } from '../../stores/story.svelte';
   import { fetchSavedStory } from '../SavedStoryFetcher';
   import type { TSavedStory } from '../../../../shared';
 
@@ -18,7 +18,7 @@
     <p>{story.summary}</p>
     <button on:click={() => {
       setStory(story.storyData.statements);
-      Object.assign(relationshipMap, story.storyData.relationships);
+      Object.assign(namesToCharacterInfo, story.storyData.characterInfo);
       storyState.set('READY');
       playStory();
     }}>Tell this Tale</button>

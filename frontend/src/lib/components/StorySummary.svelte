@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { statements, relationshipMap } from '../../stores/story.svelte';
+  import { statements, namesToCharacterInfo } from '../../stores/story.svelte';
   import { fade } from "svelte/transition";
   import { saveStory } from '../StorySaver';
 
   let saveStoryPromise: Promise<string>;
   const handleClick = () => {
     setTimeout(() => document.getElementById('recordingTaleId').scrollIntoView(), 0)
-    return saveStoryPromise = saveStory(relationshipMap, statements);
+    return saveStoryPromise = saveStory(namesToCharacterInfo, statements);
   }
 
   let showCopiedText = false;

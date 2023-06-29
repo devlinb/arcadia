@@ -1,92 +1,113 @@
 {
-    "$ref": "#/definitions/TStoryData",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "definitions": {
-      "TCharactersEventCharacters": {
-        "additionalProperties": false,
-        "properties": {
-          "eventEmoji": {
-            "type": "string"
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/TStoryData",
+  "definitions": {
+      "TStoryData": {
+          "type": "object",
+          "properties": {
+              "characterInfo": {
+                  "$ref": "#/definitions/TNamesToCharacterInfo"
+              },
+              "statements": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/TStatementCeC"
+                  }
+              }
           },
-          "left": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "right": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "left",
-          "eventEmoji"
-        ],
-        "type": "object"
+          "required": [
+              "characterInfo",
+              "statements"
+          ],
+          "additionalProperties": false
       },
-      "TNamesToRelationship": {
-        "additionalProperties": {
-          "$ref": "#/definitions/TRelationship"
-        },
-        "type": "object"
+      "TNamesToCharacterInfo": {
+          "type": "object",
+          "additionalProperties": {
+              "type": "object",
+              "properties": {
+                  "relationship": {
+                      "$ref": "#/definitions/TRelationship"
+                  },
+                  "skinColor": {
+                      "$ref": "#/definitions/TSkinColorStrings"
+                  }
+              },
+              "required": [
+                  "relationship",
+                  "skinColor"
+              ],
+              "additionalProperties": false
+          }
       },
       "TRelationship": {
-        "enum": [
-          "King",
-          "Queen",
-          "Older Daughter",
-          "Younger Daughter",
-          "Older Son",
-          "Younger Son",
-          "General",
-          "Bishop",
-          "Advisor",
-          "King's Brother",
-          "Queen's Brother",
-          "King's Newphew"
-        ],
-        "type": "string"
+          "type": "string",
+          "enum": [
+              "King",
+              "Queen",
+              "Older Daughter",
+              "Younger Daughter",
+              "Older Son",
+              "Younger Son",
+              "General",
+              "Bishop",
+              "Advisor",
+              "King's Brother",
+              "Queen's Brother",
+              "King's Newphew"
+          ]
+      },
+      "TSkinColorStrings": {
+          "type": "string",
+          "enum": [
+              "a",
+              "c",
+              "db",
+              "mb"
+          ]
       },
       "TStatementCeC": {
-        "additionalProperties": false,
-        "properties": {
-          "CeC": {
-            "items": {
-              "$ref": "#/definitions/TCharactersEventCharacters"
-            },
-            "type": "array"
+          "type": "object",
+          "properties": {
+              "statement": {
+                  "type": "string"
+              },
+              "CeC": {
+                  "type": "array",
+                  "items": {
+                      "$ref": "#/definitions/TCharactersEventCharacters"
+                  }
+              }
           },
-          "statement": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "statement"
-        ],
-        "type": "object"
+          "required": [
+              "statement"
+          ],
+          "additionalProperties": false
       },
-      "TStoryData": {
-        "additionalProperties": false,
-        "properties": {
-          "relationships": {
-            "$ref": "#/definitions/TNamesToRelationship"
+      "TCharactersEventCharacters": {
+          "type": "object",
+          "properties": {
+              "left": {
+                  "type": "array",
+                  "items": {
+                      "type": "string"
+                  }
+              },
+              "eventEmoji": {
+                  "type": "string"
+              },
+              "right": {
+                  "type": "array",
+                  "items": {
+                      "type": "string"
+                  }
+              }
           },
-          "statements": {
-            "items": {
-              "$ref": "#/definitions/TStatementCeC"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "relationships",
-          "statements"
-        ],
-        "type": "object"
+          "required": [
+              "left",
+              "eventEmoji"
+          ],
+          "additionalProperties": false
       }
-    }
   }
-  
+}

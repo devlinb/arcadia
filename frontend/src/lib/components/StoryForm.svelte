@@ -1,10 +1,14 @@
 <script lang="ts">
   import type { TRelationship, TCharacter, TStorySubmission } from '../../../../shared';
-  import { relationshipMap } from '../../stores/story.svelte';
+  import { namesToCharacterInfo } from '../../stores/story.svelte';
   import { usePregeneratedCharacters, usePregeneratedStory, enableMusicAndSfx } from '../../stores/settings.svelte';
   import Credits from './Credits.svelte';
+  import ColorSelector from './ColorSelector.svelte';
   import { getContext } from 'svelte';
-  import type { Open, Close } from 'svelte-simple-modal';
+  import { oneOf } from 'aimless.js';
+  import { generateCharacters } from '../RandomCharacters';
+  
+  import type { Open, Close, Modal } from 'svelte-simple-modal';
   import githubLogoUrl from '../../assets/github-mark.png';
   const { open, close } = getContext('simple-modal') as { open: Open; close: Close };
   const showCredits = () => open(Credits);
@@ -19,25 +23,39 @@
   export let onsubmit: (characters: TStorySubmission) => void;
   let storyId: string;
   export let handleOnStoryIdSubmit: (storyId: string) => void;
-  
+
+  const skinColorChoices = [
+    {value: 'db', color: '#331C16'},
+    {value: 'c', color: '#E6B88A'},
+    {value: 'mb', color: '#613B21'},
+    {value: 'a', color: '#ECC9BD'}];
+
+  const randSkinColor = () => oneOf(skinColorChoices).value;
+  const colorLookups = {
+    mb: '#613B21',
+    db: '#331C16',
+    c: '#E6B88A',
+    a: '#ECC9BD',
+  }
+
   const relationships: Array<TRelationship> = ['King', 'Older Daughter', 'Younger Daughter', 'Older Son', 'Younger Son', 'General', 'Queen', 'Bishop', 'Advisor', "King's Brother", "Queen's Brother", "King's Newphew"];
   const defaults: Array<TCharacter> = [
-    { id: 0, name: 'Henry', relationship: 'King' },
-    { id: 1, name: 'Beth', relationship: 'Queen' },
-    { id: 2, name: 'Martin', relationship: 'Older Son' },
-    { id: 3, name: 'Shiloh', relationship: 'Bishop' },
-    { id: 4, name: 'Gregory', relationship: 'Advisor' },
-    { id: 5, name: 'Darleen', relationship: 'Younger Daughter' },
+    { id: 0, name: 'Henry', relationship: 'King', skinColor: 'c' },
+    { id: 1, name: 'Beth', relationship: 'Queen', skinColor: 'c' },
+    { id: 2, name: 'Martin', relationship: 'Older Son', skinColor: 'c' },
+    { id: 3, name: 'Shiloh', relationship: 'Bishop', skinColor: 'mb' },
+    { id: 4, name: 'Gregory', relationship: 'Advisor', skinColor: 'db' },
+    { id: 5, name: 'Darleen', relationship: 'Younger Daughter', skinColor: 'c' },
   ];
   let unusedRelationships: Set<TRelationship> = new Set(relationships);
   unusedRelationships.delete('King');
-  let characters: Array<TCharacter> = [{ id: 0, name: '', relationship: 'King' }];
-
+  let characters: Array<TCharacter> = [{ id: 0, name: '', relationship: 'King', skinColor: randSkinColor() }];
+  
   let usePregen: boolean = false;
 
   let kingdom: string = 'Arcadia';
   const handleOnAdd = () => {
-    characters.push({ id: characters.length, name: '', relationship: [...unusedRelationships][0] });
+    characters.push({ id: characters.length, name: '', relationship: [...unusedRelationships][0], skinColor: randSkinColor() });
     characters = characters;
     unusedRelationships.delete([...unusedRelationships][0]);
     unusedRelationships = unusedRelationships;
@@ -62,7 +80,8 @@
 
   const handleOnCharacterSubmit = () => {
     for (const character of characters) {
-      relationshipMap[character.name] = character.relationship;
+      
+      namesToCharacterInfo[character.name] = { relationship: character.relationship, skinColor: character.skinColor };
     }
     onsubmit({ kingdom, characters });
   };
@@ -83,15 +102,9 @@
     return !(storyId && storyId.length >= 7 && storyId.length <= 15);
   }
   
-  const handleOnPregenClicked = (e) => {
-    if (e.currentTarget.checked) {
-      characters.length = 0;
-      for (const p of defaults) {
-        characters.push(p);
-        kingdom = 'Arcadia';
-      }
-    }
-    characters = characters;
+  const handleRandomCharacters = (e) => {
+    characters = generateCharacters();
+    console.log(characters);
   };
 
   handleOnAdd();
@@ -110,7 +123,8 @@
   </div>
 
   <form class="storyForm" on:submit|preventDefault={handleOnCharacterSubmit}>
-    <div>Name the members in the royal house of <input type="text" style="max-width: 100px" maxlength="20" bind:value={kingdom} /></div>
+    <div style="font-family: 'Berkshire Swash', cursive;">Name the members in the royal house of <input type="text" style="max-width: 100px" maxlength="20" bind:value={kingdom} /></div>
+    <button type="button" id="randomCharactersButton" on:click={handleRandomCharacters}>(Random names!)</button>
     {#each characters as character (character.id)}
       <nameentry>
         <input type="text" maxlength="12" bind:value={character.name} placeholder="name" disabled={usePregen} required />
@@ -124,6 +138,7 @@
             {/each}
           {/if}
         </select>
+          <ColorSelector bind:selectedColor={character.skinColor} colors={skinColorChoices}/>
       </nameentry>
     {/each}
     <button type="submit" disabled={characters.length < 5}>
@@ -134,10 +149,6 @@
     </button>
   </form>
   <div class="playback-controls">
-    <input type="checkbox" bind:checked={$usePregeneratedCharacters} id="pregenCharactersCheckbox" on:click={handleOnPregenClicked} />
-    <label for="pregenCharactersCheckbox">Pregen characters</label>
-    <input type="checkbox" disabled={!$usePregeneratedCharacters} bind:checked={$usePregeneratedStory} id="pregenStoryCheckbox" />
-    <label class={!$usePregeneratedCharacters ? 'disabled' : ''} for="pregenStoryCheckbox">Pregen story</label>
     <form on:submit|preventDefault={() => handleOnStoryIdSubmit(storyId)}>
       <input type="text" id="storyIdInput" bind:value={storyId} minlength="7" maxlength="15" placeholder="story id"/>
       <button type="submit">Load a saved story</button><br/>
@@ -146,9 +157,28 @@
 </div>
 
 <style>
+
+  #randomCharactersButton {
+    width: auto;
+    border: 0;
+    font-family: 'Berkshire Swash', cursive;
+  }
   .credits-group {
     margin-top: 5px;
     display: flex;
     justify-content: space-between;
   }
+
+  select option:hover {
+  background-color: inherit; /* Change to the desired background color or 'transparent' */
+  color: inherit; /* Change to the desired text color */
+  outline: 5px; /* Remove the outline */
+  background: none;
+}
+
+select option::selection {
+  background-color: inherit; /* Change to the desired background color or 'transparent' */
+  color: inherit; /* Change to the desired text color */
+  outline: 5px; /* Remove the outline */
+}
 </style>

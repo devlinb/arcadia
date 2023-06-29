@@ -1,41 +1,29 @@
 <script lang="ts">
-  import { relationshipMap } from '../../stores/story.svelte';
+  import { namesToCharacterInfo } from '../../stores/story.svelte';
   import { fly } from 'svelte/transition';
   import type { TRelationship } from '../../../../shared/dist';
-  import kingUrl from '../../assets/king.jpg';
-  import advisorUrl from '../../assets/advisor.jpg';
-  import queenUrl from '../../assets/queen.jpg'
-  import youngPrincessUrl from '../../assets/young_princess.jpg';
-  import youngPrinceUrl from '../../assets/young_prince.jpg';
-  import olderPrincessUrl from '../../assets/older_princess.jpg';
-  import olderPrinceUrl from '../../assets/older_prince.jpg';
-  import bishopUrl from '../../assets/bishop.jpg';
-  import generalUrl from '../../assets/general.jpg';
-  import kingsBrotherUrl from '../../assets/kings_brother.jpg';
-  import kingsNephew from '../../assets/kings_nephew.jpg';
-  import queensBrother from '../../assets/queens_brother.jpg';
-
-  console.log(`relationshipMap: ${JSON.stringify(relationshipMap)}`);
+  import type { TSkinColorStrings } from '../../../../shared/types';
   // This is how Svelte does props!
   export let characters: string[];
   export let flyInFrom: 'left' | 'right';
 
   // Maps a relationship to the accompanying portrait URL, this will change soon as we will select from a random set
   // of portraits in a future version.
-  const relationshipToUrl = (relationship: TRelationship): string => {
+  const characterInfoToUrl = ({relationship, skinColor}: {relationship: TRelationship, skinColor: TSkinColorStrings}): string => {
+    
     switch (relationship) {
-      case "King": return kingUrl;
-      case "Queen": return queenUrl;
-      case "Older Daughter": return olderPrincessUrl;
-      case "Younger Daughter": return youngPrincessUrl;
-      case "Older Son": return olderPrinceUrl;
-      case "Younger Son": return youngPrinceUrl;
-      case "General": return generalUrl;
-      case "Bishop": return bishopUrl;
-      case "Advisor": return advisorUrl;
-      case "King's Brother": return kingsBrotherUrl;
-      case "King's Newphew": return kingsNephew;
-      case "Queen's Brother": return queensBrother;
+      case "King": return `/king_${skinColor}.jpg`;
+      case "Queen": return `/queen_${skinColor}.jpg`;
+      case "Older Daughter": return `/older_princess_${skinColor}.jpg`;
+      case "Younger Daughter": return `/young_princess_${skinColor}.jpg`;
+      case "Older Son": return `/older_prince_${skinColor}.jpg`;
+      case "Younger Son": return `/young_prince_${skinColor}.jpg`;
+      case "General": return `/general_${skinColor}.jpg`;
+      case "Bishop": return `/bishop_${skinColor}.jpg`;
+      case "Advisor": return `/advisor_${skinColor}.jpg`;
+      case "King's Brother": return `/kings_brother_${skinColor}.jpg`;
+      case "King's Newphew": return `/kings_nephew_${skinColor}.jpg`;
+      case "Queen's Brother": return `/queens_brother_${skinColor}.jpg`;
       default:
         return 'none';
     }
@@ -46,9 +34,9 @@
 
 <div class="character" in:fly={{ x: flyInXVal, delay: 300, duration: 500 }}>
   {#each characters as person}
-    <div class={characters.length === 2 ? 'two-up' : ''} style="background-image: url({relationshipToUrl(relationshipMap[person.trim()])})">
-      {#if relationshipMap[person.trim()] && relationshipToUrl(relationshipMap[person.trim()]) !== 'none'}
-        <img class={characters.length === 2 ? 'two-up' : ''} src={relationshipToUrl(relationshipMap[person.trim()])} alt="portrait of {person}" />
+    <div style="display: flex; flex-direction: column;">
+      {#if namesToCharacterInfo[person.trim()] && characterInfoToUrl(namesToCharacterInfo[person.trim()]) !== 'none'}
+        <img class={characters.length === 3 ? 'hidden' : characters.length === 2 ? 'two-up' : ''} src={characterInfoToUrl(namesToCharacterInfo[person.trim()])} alt="portrait of {person}" />
       {/if}
       <h3>{person.trim()}</h3>
     </div>
@@ -74,7 +62,6 @@
   }
 
   .character > div img {
-    opacity: 0;
     box-shadow: -1px -1px 1px #ffd875;
     max-width: 100%;
     object-fit: contain;
@@ -85,6 +72,9 @@
   .character > div img.two-up {
     height: 62px;
     width: 100px;
+  }
+  img.hidden {
+    display:none;
   }
 
   .character > div > h3 {

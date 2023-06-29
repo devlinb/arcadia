@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "aimless.js": "^1.0.1",
+    "svelte-select": "^5.6.1",
     "svelte-simple-modal": "^1.5.2"
   }
 }
