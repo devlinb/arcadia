@@ -1,13 +1,10 @@
 import { parseOutEvents, statementEventsToStatementCecs } from '../shared/';
 import { parse as parseUrl } from 'url';
-import { fetchStreamedChatContent } from 'streamed-chatgpt-api';
 import { IncomingMessage } from 'http';
 import WebSocket, { Server as WebSocketServer } from 'ws';
 import { sanitizeQueryString } from '../utils/sanitizeQueryString';
-
-const configuration = {
-  apiKey: process.env.OPENAI_API_KEY,
-};
+import openai from 'openai';
+import { ChatCompletionMessageParam } from 'openai/resources';
 
 const wss = new WebSocketServer({ noServer: true });
 
@@ -59,58 +56,51 @@ const handleInitialConnection = async (
 ) => {
   console.log(`making a story`);
 
-  try {
-    const parsedUrl = parseUrl(req.url || '', true);
-    const submission = sanitizeQueryString(parsedUrl);
+  const parsedUrl = parseUrl(req.url || '', true);
+  const submission = sanitizeQueryString(parsedUrl);
 
-    let charactersStr = '';
+  let charactersStr = '';
 
-    for (const p of submission.characters) {
-      charactersStr += `${p.name} - ${p.relationship}\n`;
-    }
-
-    charactersStr += `\nKingdom - ${submission.kingdom}`;
-
-    // Each request will get its own instance of paragraph processor;
-    const processWord = createParagraphProcessor(ws);
-
-    // Send "generating_story" message
-    ws.send(JSON.stringify({ type: 'generating_story' }));
-
-    const options = {
-      apiKey: configuration.apiKey,
-      model: 'gpt-3.5-turbo',
-      messageInput: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: initialPrompt },
-        { role: 'user', content: charactersStr },
-      ],
-      maxTokens: 2000,
-      temperature: 0.9,
-      top_p: 0.7,
-      presence_penalty: 0.5,
-      frequency_penalty: 0,
-    };
-    fetchStreamedChatContent(
-      options,
-      processWord,
-      () => {
-        ws.send(JSON.stringify({ type: 'end' }));
-        ws.close();
-      },
-      (error: unknown) => {
-        console.log(`Error streaming content: ${JSON.stringify(error)}`);
-        ws.send(JSON.stringify({ type: 'error', payload: error }));
-        ws.close();
-      }
-    );
-  } catch (e) {
-    console.log(`Got an error in outermost handler: ${JSON.stringify(e)}`);
-    ws.send(
-      JSON.stringify({ type: 'error', payload: { error: JSON.stringify(e) } })
-    );
-    ws.close();
+  for (const p of submission.characters) {
+    charactersStr += `${p.name} - ${p.relationship}\n`;
   }
+
+  charactersStr += `\nKingdom - ${submission.kingdom}`;
+
+  // Each request will get its own instance of paragraph processor;
+  const processWord = createParagraphProcessor(ws);
+
+  // Send "generating_story" message
+  ws.send(JSON.stringify({ type: 'generating_story' }));
+
+  const client = new openai({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
+  const messages: ChatCompletionMessageParam[] = [
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: initialPrompt },
+    { role: 'user', content: charactersStr },
+  ];
+
+  const response = await client.chat.completions.create({
+    model: 'gpt-3.5-turbo',
+    messages: messages,
+    max_tokens: 2000,
+    temperature: 0.9,
+    top_p: 0.7,
+    presence_penalty: 0.5,
+    frequency_penalty: 0,
+    stream: true,
+  });
+
+  for await (const chunk of response) {
+    if (chunk.choices[0].delta.content) {
+      processWord(chunk.choices[0].delta.content);
+    }
+  }
+  ws.send(JSON.stringify({ type: 'end' }));
+  ws.close();
 };
 
 wss.on('connection', handleInitialConnection);

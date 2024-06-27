@@ -10,7 +10,7 @@ import * as dotenv from 'dotenv';
 const envLoadResult = dotenv.config();
 console.log(`Environment: ${JSON.stringify(envLoadResult)}`);
 
-import getPromptws from './routes/promptws';
+// import getPromptws from './routes/promptws';
 import getPromptStreamingWs from './routes/promptstreamingws';
 import healthcheck from './routes/healthcheck';
 import savestory from './routes/savestory';
@@ -59,9 +59,9 @@ const server = http.createServer(app);
 // Set up the WebSocket server for the '/promptws' endpoint
 server.on('upgrade', (req, socket, head) => {
   console.log('got an upgrade request' + req.url);
-  if (req.url?.startsWith('/promptws')) {
-    getPromptws(req, socket, head);
-  } else if (req.url?.startsWith('/promptstreamingws')) {
+  // if (req.url?.startsWith('/promptws')) {
+  //   getPromptws(req, socket, head);}
+  if (req.url?.startsWith('/promptstreamingws')) {
     getPromptStreamingWs(req, socket, head);
   } else {
     console.log('wrong url destroying');

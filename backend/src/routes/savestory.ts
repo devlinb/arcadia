@@ -1,13 +1,13 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import shortid from 'shortid';
 import { Request, Response } from 'express';
-import { Configuration, OpenAIApi } from 'openai';
+import OpenAI from 'openai';
 import { TStoryData } from '../shared';
 
-const configuration = new Configuration({
+const configuration = {
   apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+};
+const openai = new OpenAI(configuration);
 
 // instantiate S3
 const s3Client = new S3Client({
@@ -28,7 +28,7 @@ async function saveStoryToS3(storyData: TStoryData): Promise<string> {
     ''
   );
 
-  const completion = await openai.createChatCompletion({
+  const completion = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     messages: [
       { role: 'system', content: systemPrompt },
@@ -42,7 +42,7 @@ async function saveStoryToS3(storyData: TStoryData): Promise<string> {
     presence_penalty: 0.5,
     frequency_penalty: 0,
   });
-  const summary = completion.data.choices[0].message?.content;
+  const summary = completion.choices[0].message?.content;
   console.log(`summary is: ${summary}`);
 
   const params = {
