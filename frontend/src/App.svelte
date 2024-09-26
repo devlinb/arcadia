@@ -101,7 +101,7 @@
     <scrollbottom>
     {#if $storyState !== 'USER_INPUT'}
       <div class="playback-controls">
-        <button on:click={() => window.location.assign(window.location.origin)}>Start Over</button>
+        <button on:click={() => window.location.assign(window.location.pathname)}>Start Over</button>
         <input id="ap-checkbox" type="checkbox" bind:checked={$useAutoplay} />
         <label for="ap-checkbox">auto advance</label>
         <input type="checkbox" bind:checked={$enableMusicAndSfx} id="enableMusicAndSfxCheckbox" />
