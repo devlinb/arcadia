@@ -13,9 +13,10 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.arcadia-backend.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`/savestory`, `/getstory`, `/healthcheck`, `/promptstreamingws`)"
+      - "traefik.http.routers.arcadia-backend.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`${BASE_PATH:-/}savestory`, `${BASE_PATH:-/}getstory`, `${BASE_PATH:-/}healthcheck`, `${BASE_PATH:-/}promptstreamingws`)"
       - "traefik.http.routers.arcadia-backend.entrypoints=websecure"
       - "traefik.http.routers.arcadia-backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.arcadia-backend.priority=2"
       - "traefik.http.services.arcadia-backend.loadbalancer.server.port=3000"
       - "traefik.docker.network=traefik"
 
@@ -24,8 +25,7 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
       args:
-        WS_BASE: ${WS_BASE:-ws://localhost:8080}
-        WS_PATH: /promptstreamingws
+        BASE_PATH: ${BASE_PATH:-/}
     depends_on:
       - backend
     ports:
@@ -36,9 +36,10 @@ services:
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.arcadia-frontend.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.arcadia-frontend.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`${BASE_PATH:-/}`)"
       - "traefik.http.routers.arcadia-frontend.entrypoints=websecure"
       - "traefik.http.routers.arcadia-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.arcadia-frontend.priority=1"
       - "traefik.http.services.arcadia-frontend.loadbalancer.server.port=80"
       - "traefik.docker.network=traefik"
 

@@ -14,9 +14,11 @@ import { parseOutEvents, statementEventsToStatementCecs } from "../../../shared/
  * @returns 
  */
 export const startStreamingStory = async (submission: TStorySubmission): Promise<void> => {
-  const base = import.meta.env.VITE_API_SERVER_WS.replace(/\/$/, '');
-  const path = import.meta.env.VITE_PROMPT_URL_STREAMING_WS.replace(/^\//, '');
-  const url = new URL(`${base}/${path}`);
+  const basePath = import.meta.env.VITE_BASE_PATH || '/';
+  const normalizedBase = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsUrl = `${protocol}//${window.location.host}${normalizedBase}/promptstreamingws`;
+  const url = new URL(wsUrl);
   url.searchParams.append('kingdom', submission.kingdom);
   url.searchParams.append('characters', JSON.stringify(submission.characters));
   

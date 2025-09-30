@@ -3,11 +3,8 @@ FROM node:20-alpine AS builder
 WORKDIR /repo
 
 # Build args become Vite envs
-ARG WS_BASE=ws://localhost
-ARG WS_PATH=/promptstreamingws
-ENV VITE_API_SERVER_WS=$WS_BASE
-ENV VITE_PROMPT_URL_WS=$WS_PATH
-ENV VITE_PROMPT_URL_STREAMING_WS=$WS_PATH
+ARG BASE_PATH=/
+ENV VITE_BASE_PATH=$BASE_PATH
 
 # install
 COPY frontend/package*.json frontend/tsconfig.json frontend/vite.config.ts ./frontend/
