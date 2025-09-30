@@ -14,7 +14,9 @@ import { parseOutEvents, statementEventsToStatementCecs } from "../../../shared/
  * @returns 
  */
 export const startStreamingStory = async (submission: TStorySubmission): Promise<void> => {
-  const url = new URL(`${import.meta.env.VITE_API_SERVER_WS}${import.meta.env.VITE_PROMPT_URL_STREAMING_WS}`);
+  const base = import.meta.env.VITE_API_SERVER_WS.replace(/\/$/, '');
+  const path = import.meta.env.VITE_PROMPT_URL_STREAMING_WS.replace(/^\//, '');
+  const url = new URL(`${base}/${path}`);
   url.searchParams.append('kingdom', submission.kingdom);
   url.searchParams.append('characters', JSON.stringify(submission.characters));
   

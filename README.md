@@ -51,20 +51,129 @@ Common types and utility functions are in `shared`. Primarily used for data type
 Due to build issues on some OSs, sadly backend now has a hard copy of shared types, need to figure out why symlinking isn't being picked up on MacOS.
 
 # Building and Running
-To run the project, do the following:
+
+## Local Development
+
+To run the project locally, do the following:
 
 1. git pull into a local folder
-2. (optional if you want to run the backend yourself) in the root folder of `backend` create a file `.env` and populate it with `OPENAI_API_KEY=` and fill in your key.  
+2. (optional if you want to run the backend yourself) in the root folder of `backend` create a file `.env` and populate it with `OPENAI_API_KEY=` and fill in your key.
 3. In each of `shared`, `backend` and `frontend` do `npm install` and `npm build`
 4. You can run just the front end and view the pregenerated stories, do to so go to `frontend` and enter `npm run dev` that will start up vite, and you can connect to `http://localhost:5173/`, select both checkboxes up top and then `make some drama`.
 ![Two checkboxes at top of the screen selected, one labeled "Pregenerated Character" the other labeled "Pregenerated Story"](https://github.com/devlinb/arcadia/blob/main/assets/checkboxes.JPG)
 
 
-  a. To alter which pregenerated story is displayed, you can change the index on line 14 of [StoryFetcherws.ts](/frontend/src/lib/StoryFetcherws.ts) 
+  a. To alter which pregenerated story is displayed, you can change the index on line 14 of [StoryFetcherws.ts](/frontend/src/lib/StoryFetcherws.ts)
 
     `const events = parseOutEvents(pregenStories[2].story);`
 5. To run the backend, go to `backend` and enter `npm run dev`. The frontend, when run locally, will automatically attempt to connect to the backend on localhost.
 6. `npm run debug` is supported on the backend to run `node --inspect`
+
+## Docker Development
+
+To run the project with Docker Compose locally:
+
+1. Clone the repo and create a `.env` file in the project root:
+```bash
+OPENAI_API_KEY=your_key_here
+AWS_ACCESS_KEY_ID=your_key_here
+AWS_SECRET_ACCESS_KEY=your_key_here
+WS_BASE=ws://localhost:8080
+```
+
+2. Build and start the services:
+```bash
+docker compose build
+docker compose up -d
+```
+
+3. Access the application at `http://localhost:8080`
+
+## Production Deployment with Traefik
+
+### Prerequisites on VPS
+- Docker and Docker Compose installed
+- Traefik already running with a network named `traefik`
+- Domain DNS pointing to your VPS IP
+
+### Initial Deployment
+
+1. **Clone the repository on your VPS:**
+```bash
+ssh user@your-vps
+git clone https://github.com/yourusername/arcadia.git
+cd arcadia
+```
+
+2. **Create production `.env` file:**
+```bash
+cat > .env <<EOF
+OPENAI_API_KEY=your_actual_key
+AWS_ACCESS_KEY_ID=your_actual_key
+AWS_SECRET_ACCESS_KEY=your_actual_key
+DOMAIN=arcadia.yourdomain.com
+WS_BASE=wss://arcadia.yourdomain.com
+EOF
+```
+
+3. **Build and start services:**
+```bash
+docker compose build
+docker compose up -d
+```
+
+4. **Verify Traefik picked it up:**
+```bash
+docker compose logs -f
+# Check Traefik dashboard or logs to see if routes registered
+```
+
+### Updating a Running Instance
+
+To deploy updates to your production instance:
+
+1. **SSH into VPS and pull latest code:**
+```bash
+ssh user@your-vps
+cd arcadia
+git pull origin main
+```
+
+2. **Rebuild changed services:**
+```bash
+# If frontend changed:
+docker compose build frontend
+
+# If backend changed:
+docker compose build backend
+
+# Or rebuild everything:
+docker compose build
+```
+
+3. **Recreate containers (zero-downtime update):**
+```bash
+docker compose up -d
+```
+Docker Compose automatically:
+- Detects image changes
+- Creates new containers
+- Traefik routes traffic to new containers
+- Removes old containers
+
+4. **Verify deployment:**
+```bash
+docker compose ps
+docker compose logs -f frontend
+docker compose logs -f backend
+```
+
+5. **Rollback if needed:**
+```bash
+git checkout <previous-commit-hash>
+docker compose build
+docker compose up -d
+```
 
 
 # Todo

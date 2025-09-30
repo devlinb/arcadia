@@ -1,0 +1,47 @@
+version: "3.9"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    ports:
+      - "3000:3000" # optional; useful for debugging direct calls
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.arcadia-backend.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`/savestory`, `/getstory`, `/healthcheck`, `/promptstreamingws`)"
+      - "traefik.http.routers.arcadia-backend.entrypoints=websecure"
+      - "traefik.http.routers.arcadia-backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.arcadia-backend.loadbalancer.server.port=3000"
+      - "traefik.docker.network=traefik"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        WS_BASE: ${WS_BASE:-ws://localhost:8080}
+        WS_PATH: /promptstreamingws
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.arcadia-frontend.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.arcadia-frontend.entrypoints=websecure"
+      - "traefik.http.routers.arcadia-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.arcadia-frontend.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik"
+
+networks:
+  traefik:
+    external: true
