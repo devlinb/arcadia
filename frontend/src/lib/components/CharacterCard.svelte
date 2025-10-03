@@ -10,20 +10,24 @@
   // Maps a relationship to the accompanying portrait URL, this will change soon as we will select from a random set
   // of portraits in a future version.
   const characterInfoToUrl = ({relationship, skinColor}: {relationship: TRelationship, skinColor: TSkinColorStrings}): string => {
-    
+    const basePath = import.meta.env.BASE_URL || '/';
+    // Ensure basePath ends with / for proper concatenation
+    const normalizedBase = basePath.endsWith('/') ? basePath : `${basePath}/`;
+    const getImagePath = (filename: string) => `${normalizedBase}${filename}`;
+
     switch (relationship) {
-      case "King": return `king_${skinColor}.jpg`;
-      case "Queen": return `queen_${skinColor}.jpg`;
-      case "Older Daughter": return `older_princess_${skinColor}.jpg`;
-      case "Younger Daughter": return `young_princess_${skinColor}.jpg`;
-      case "Older Son": return `older_prince_${skinColor}.jpg`;
-      case "Younger Son": return `young_prince_${skinColor}.jpg`;
-      case "General": return `general_${skinColor}.jpg`;
-      case "Bishop": return `bishop_${skinColor}.jpg`;
-      case "Advisor": return `advisor_${skinColor}.jpg`;
-      case "King's Brother": return `kings_brother_${skinColor}.jpg`;
-      case "King's Newphew": return `kings_nephew_${skinColor}.jpg`;
-      case "Queen's Brother": return `queens_brother_${skinColor}.jpg`;
+      case "King": return getImagePath(`king_${skinColor}.jpg`);
+      case "Queen": return getImagePath(`queen_${skinColor}.jpg`);
+      case "Older Daughter": return getImagePath(`older_princess_${skinColor}.jpg`);
+      case "Younger Daughter": return getImagePath(`young_princess_${skinColor}.jpg`);
+      case "Older Son": return getImagePath(`older_prince_${skinColor}.jpg`);
+      case "Younger Son": return getImagePath(`young_prince_${skinColor}.jpg`);
+      case "General": return getImagePath(`general_${skinColor}.jpg`);
+      case "Bishop": return getImagePath(`bishop_${skinColor}.jpg`);
+      case "Advisor": return getImagePath(`advisor_${skinColor}.jpg`);
+      case "King's Brother": return getImagePath(`kings_brother_${skinColor}.jpg`);
+      case "King's Newphew": return getImagePath(`kings_nephew_${skinColor}.jpg`);
+      case "Queen's Brother": return getImagePath(`queens_brother_${skinColor}.jpg`);
       default:
         return 'none';
     }

@@ -5,17 +5,19 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     env_file: .env
-    ports:
-      - "3000:3000" # optional; useful for debugging direct calls
+    # ports:
+    #   - "3000:3000" # optional; useful for debugging direct calls
     restart: unless-stopped
     networks:
       - default
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.arcadia-backend.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`${BASE_PATH:-/}savestory`, `${BASE_PATH:-/}getstory`, `${BASE_PATH:-/}healthcheck`, `${BASE_PATH:-/}promptstreamingws`)"
+      - "traefik.http.routers.arcadia-backend.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`${BASE_PATH:-}/savestory`, `${BASE_PATH:-}/getstory`, `${BASE_PATH:-}/healthcheck`, `${BASE_PATH:-}/promptstreamingws`)"
       - "traefik.http.routers.arcadia-backend.entrypoints=websecure"
-      - "traefik.http.routers.arcadia-backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.arcadia-backend.tls=true"
+      - "traefik.http.routers.arcadia-backend.middlewares=arcadia-backend-stripprefix"
+      - "traefik.http.middlewares.arcadia-backend-stripprefix.stripprefix.prefixes=${BASE_PATH:-}"
       - "traefik.http.routers.arcadia-backend.priority=2"
       - "traefik.http.services.arcadia-backend.loadbalancer.server.port=3000"
       - "traefik.docker.network=traefik"
@@ -28,17 +30,17 @@ services:
         BASE_PATH: ${BASE_PATH:-/}
     depends_on:
       - backend
-    ports:
-      - "8080:80"
+    # ports:
+    #   - "8080:80"
     restart: unless-stopped
     networks:
       - default
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.arcadia-frontend.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`${BASE_PATH:-/}`)"
+      - "traefik.http.routers.arcadia-frontend.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`${BASE_PATH:-}`)"
       - "traefik.http.routers.arcadia-frontend.entrypoints=websecure"
-      - "traefik.http.routers.arcadia-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.arcadia-frontend.tls=true"
       - "traefik.http.routers.arcadia-frontend.priority=1"
       - "traefik.http.services.arcadia-frontend.loadbalancer.server.port=80"
       - "traefik.docker.network=traefik"
